@@ -53,7 +53,11 @@ def test_module_help_and_status_exit_zero():
     assert "engine_installed" in st.stdout
 
 
-def test_cli_cancel_does_not_install(tmp_path):
+def test_cli_cancel_does_not_install(tmp_path, monkeypatch):
+    import platform
+    if platform.system() == "Darwin":
+        pytest.skip("CLI wizard requires NVIDIA GPU; preflight exits on macOS without GPU")
+
     env = {
         **os.environ,
         "PYTHONPATH": str(ROOT),
