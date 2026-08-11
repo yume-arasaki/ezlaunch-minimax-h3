@@ -72,3 +72,6 @@ uv run pytest -q
 - `scripts/EZlaunch.sh` — Linux launcher
 - `scripts/EZlaunch.bat` — Windows launcher
 - `scripts/comfy-up.sh` — Restart Comfy without reinstall
+
+## AI Agent Integration
+This project is designed to work with AI coding agents. The PROJECT.md file provides full architecture context. Use the `.tasks/` directory to track active work and hand off between sessions.

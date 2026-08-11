@@ -9,7 +9,7 @@
 - Extracted MVP from zip archive
 - Initialized git repo, pushed to GitHub
 - Fixed test failure on macOS (CLI wizard test assumes NVIDIA GPU)
-- Created CLAUDE.md project context
+- Created PROJECT.md project context
 - Installed deps via uv, verified tests pass
 
 ## Known Issues
@@ -17,5 +17,5 @@
 
 ## Next Steps
 - Joey can start working on the project
-- Ready for Claude Code jobs with full context via CLAUDE.md
+- Ready for AI agent jobs with full context via PROJECT.md
 - GPU-specific work requires Linux/Windows environment with NVIDIA hardware

@@ -130,6 +130,22 @@ Battle-tested stack notes (4090 lab): inspired by local H3 turbo work (driver 58
 
 ---
 
+## For AI agents
+
+This project is structured for AI coding agent collaboration:
+
+- **`PROJECT.md`** — Full architecture reference. AI agents read this for context.
+- **`.tasks/active-work.md`** — Current work state. Updated after every session.
+- **`.tasks/TASK-*.md`** — Focused task briefings for isolated jobs.
+
+**Workflow:**
+1. Read `PROJECT.md` for architecture
+2. Read `.tasks/active-work.md` for current state
+3. Create `.tasks/TASK-*.md` for focused work
+4. Update `.tasks/active-work.md` when done
+
+---
+
 ## Roadmap
 
 - [x] 4090 / 3090 MVP profiles  
