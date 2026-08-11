@@ -1,0 +1,17 @@
+workflows:
+  - id: t2v
+    title: "Text-to-Video (Turbo)"
+    file: minimax_h3_t2v_turbo.json
+    dest: user/default/workflows/minimax_h3_t2v_turbo.json
+    mode: t2v
+  - id: i2v
+    title: "Image-to-Video (Turbo)"
+    file: minimax_h3_i2v_turbo.json
+    dest: user/default/workflows/minimax_h3_i2v_turbo.json
+    mode: i2v
+  - id: ref2v
+    title: "Reference-to-Video (Turbo)"
+    file: minimax_h3_ref2v_turbo.json
+    dest: user/default/workflows/minimax_h3_ref2v_turbo.json
+    mode: ref2v
+    requires_unet: minimax_h3_ref2va_pruned_int8_convrot.safetensors

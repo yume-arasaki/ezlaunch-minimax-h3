@@ -1,0 +1,40 @@
+# Ampere 24GB profile (RTX 3090 / sm_86)
+id: rtx_3090
+display_name: "NVIDIA GeForce RTX 3090"
+match_names:
+  - "RTX 3090"
+  - "GeForce RTX 3090"
+  - "RTX 3090 Ti"
+compute_capability: [8, 6]
+vram_gb_min: 20
+driver_min: "535.0"
+driver_recommended: "550.0"
+torch_index_url: "https://download.pytorch.org/whl/cu128"
+torch_packages:
+  - "torch"
+  - "torchvision"
+  - "torchaudio"
+comfy_env:
+  COMFY_KITCHEN_FORCE_CUDA: "1"
+  PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
+comfy_args:
+  - "--listen"
+  - "127.0.0.1"
+  - "--port"
+  - "8188"
+  - "--disable-pinned-memory"
+  - "--fp16-intermediates"
+  - "--disable-cuda-malloc"
+  - "--lowvram"
+  - "--disable-async-offload"
+  - "--disable-smart-memory"
+  - "--use-sage-attention"
+attention_fallback_args:
+  - "--use-pytorch-cross-attention"
+sage_sm89_triton_patch: false
+clip_device: cpu
+default_megapixels: 0.6
+default_steps: 4
+notes: >
+  Same 24GB VRAM class as 4090. First smoke uses 0.6 MP if 0.7 OOMs.
+  Sage on sm86 uses Triton path in sageattention (no Ada patch).

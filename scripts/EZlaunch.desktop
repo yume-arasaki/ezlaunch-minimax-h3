@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=EZlaunch MiniMax-H3
+Comment=Install and run MiniMax-H3 video AI
+Exec=bash -c 'cd "$(dirname "%k")/.." && ./scripts/EZlaunch.sh'
+Terminal=false
+Categories=Graphics;AudioVideo;

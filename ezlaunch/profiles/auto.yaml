@@ -1,0 +1,10 @@
+# Name substrings → profile id (first match wins, case-insensitive)
+mappings:
+  - contains: "4090"
+    profile: rtx_4090
+  - contains: "3090"
+    profile: rtx_3090
+fallback_unknown_24gb: rtx_3090
+unsupported_message: >
+  This MVP supports NVIDIA GeForce RTX 4090 and RTX 3090.
+  Other cards may work later — pick the closest profile only if you know what you're doing.
