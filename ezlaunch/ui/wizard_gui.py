@@ -11,6 +11,7 @@ from ezlaunch.wizard import (
     step_download_models,
     step_install_engine,
     step_launch,
+    step_select_te_variant,
 )
 
 
@@ -122,8 +123,12 @@ class WizardApp(tk.Tk):
         )
 
     def on_models(self):
+        def fn():
+            step_select_te_variant()
+            step_download_models(progress=self._progress)
+
         self._run_bg(
-            lambda: step_download_models(progress=self._progress),
+            fn,
             "Models ready. Click Launch.",
         )
 

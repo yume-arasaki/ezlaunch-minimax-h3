@@ -9,6 +9,7 @@ from ezlaunch.wizard import (
     step_download_models,
     step_install_engine,
     step_launch,
+    step_select_te_variant,
 )
 
 
@@ -58,6 +59,7 @@ def run_cli() -> int:
 
     print("\n--- Download models ---")
     try:
+        step_select_te_variant()
         step_download_models(progress=_progress)
     except Exception as e:
         print(f"\nDownload failed: {e}")

@@ -246,10 +246,13 @@ def check_install_path_length(probe: Optional[Path] = None) -> Optional[Prefligh
     )
 
 
-def run_preflight(min_disk_gb: float = 100.0, install_probe: Optional[Path] = None) -> List[PreflightItem]:
+def run_preflight(min_disk_gb: float = 100.0, install_probe: Optional[Path] = None, te_variant: str = "stock") -> List[PreflightItem]:
     items: List[PreflightItem] = [check_python(), check_git()]
     probe = install_probe or Path.home()
     items.append(check_disk(probe, min_disk_gb))
+    # Heretic TE adds ~15 GB on top of base install
+    if te_variant == "heretic":
+        items.append(check_disk(probe, min_disk_gb + 15))
     items.append(check_port_free(8188))
     wlp = check_windows_long_paths()
     if wlp:

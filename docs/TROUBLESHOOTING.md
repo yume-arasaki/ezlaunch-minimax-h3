@@ -204,3 +204,27 @@ Override: `EZLAUNCH_HOME` (use a **permanent** path, not temp folders).
 ```
 
 This only checks scripts, imports, and profiles — it does **not** install torch or pull models.
+
+---
+
+## Heretic text encoder issues
+
+**Symptom:** ComfyUI loads but the wrong TE is used.
+
+EZlaunch downloads both TEs side-by-side. In ComfyUI:
+1. Open any workflow
+2. Find the **CLIPLoader** node (loads `qwen3vl_32b_*.safetensors`)
+3. The dropdown shows both stock and Heretic — pick the one you want
+4. Queue prompt
+
+**Symptom:** Disk full during Heretic download.
+
+Heretic is ~15 GB. If you selected Heretic in the wizard, free up ~15 GB more than the base 100 GB requirement.
+
+**Symptom:** 401 / 403 when downloading Heretic TE.
+
+The Heretic TE is hosted on a community mirror (sakamakismile). It should be public. If you get 401/403, check your internet connection and try again — no HF token is needed for this repo.
+
+**Symptom:** "Model not found" in ComfyUI after selecting Heretic.
+
+The Heretic TE file is at `models/text_encoders/qwen3vl_32b_heretic_minimax_h3_nvfp4.safetensors`. Verify it exists in your ComfyUI install folder. If missing, re-run **Download models**.

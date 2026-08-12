@@ -52,8 +52,12 @@ def download_all(
     root: Path | None = None,
     progress: Optional[ProgressCb] = None,
     token: Optional[str] = None,
+    te_variant: str = "stock",
 ) -> Dict[str, str]:
-    """Download required HF files into ComfyUI model dirs. Returns id→path."""
+    """Download required HF files into ComfyUI model dirs. Returns id→path.
+
+    te_variant: "stock" (default) or "heretic" — controls optional TE download.
+    """
     try:
         from huggingface_hub import hf_hub_download
     except ImportError as e:
@@ -73,6 +77,9 @@ def download_all(
     total = max(1, len(files))
 
     for i, item in enumerate(files):
+        # Gate optional Heretic TE on state flag
+        if te_variant == "stock" and item.get("id") == "text_encoder_heretic":
+            continue
         dest = comfy / item["dest"]
         dest.parent.mkdir(parents=True, exist_ok=True)
         hf_file = _hf_path(item)

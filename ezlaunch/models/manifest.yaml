@@ -55,6 +55,19 @@ files:
     required: true
     note: "Large TE — runtime profile keeps CLIP on CPU"
 
+  # Optional: community "Heretic" (abliterated/uncensored) text encoder.
+  # Only downloaded when te_variant is set to "heretic" in state.json.
+  # Filename matches stock so ComfyUI CLIPLoader picks it up automatically.
+  # Source: https://huggingface.co/sakamakismile/Qwen3-VL-32B-Heretic-MiniMax-H3-NVFP4
+  # Size: ~15 GB. Not guaranteed to bypass all safety filters — user responsibility.
+  - id: text_encoder_heretic
+    repo: "sakamakismile/Qwen3-VL-32B-Heretic-MiniMax-H3-NVFP4"
+    hf_path: "qwen3vl_32b_heretic_minimax_h3_nvfp4.safetensors"
+    dest: "models/text_encoders/qwen3vl_32b_heretic_minimax_h3_nvfp4.safetensors"
+    approx_gb: 15
+    required: false
+    note: "Heretic/abliterated TE — optional, ~15 GB extra. Select in wizard."
+
 # Legacy single-workflow key kept for older code paths; install prefers workflows/
 workflow:
   source_in_node: "example_workflows/minimax_h3_t2v_turbo.json"

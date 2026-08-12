@@ -82,10 +82,40 @@ def step_install_engine(root: Path | None = None, progress: Optional[ProgressCb]
     return {"ok": True, "profile_id": profile_id, "sage_status": st.get("sage_status")}
 
 
+def step_select_te_variant(root: Path | None = None) -> dict:
+    """Choose text encoder variant: stock (default) or Heretic (optional)."""
+    root = ensure_layout(root)
+    st = load_state(root)
+    # Already decided? Return current choice.
+    current = st.get("te_variant", "stock")
+    if current in ("stock", "heretic"):
+        return {"te_variant": current, "changed": False}
+
+    # First time: present choice
+    print()
+    print("--- Text encoder choice ---")
+    print()
+    print("  1) Stock TE (recommended)")
+    print("     Comfy-Org's official text encoder")
+    print()
+    print("  2) Heretic TE (advanced)")
+    print("     Community abliterated/uncensored variant")
+    print("     ~15 GB extra · not guaranteed to bypass all safety")
+    print("     · user responsibility · filename matches stock")
+    print()
+    ans = input("Choose [1/2] (default 1): ").strip()
+    if ans in ("2",):
+        st["te_variant"] = "heretic"
+    else:
+        st["te_variant"] = "stock"
+    save_state(st, root)
+    return {"te_variant": st["te_variant"], "changed": True}
+
+
 def step_download_models(root: Path | None = None, progress: Optional[ProgressCb] = None) -> dict:
     root = ensure_layout(root)
     st = load_state(root)
-    download_all(root, progress=progress)
+    download_all(root, progress=progress, te_variant=st.get("te_variant", "stock"))
     missing = list_missing(root)
     if missing:
         names = ", ".join(m["filename"] for m in missing)

@@ -98,8 +98,35 @@ Auto-detect reads `nvidia-smi`. You can also force a profile later (advanced doc
 - [ ] NVIDIA **4090** or **3090**
 - [ ] Driver new enough (4090 ≥ **570**, 3090 ≥ **535**)
 - [ ] **~100 GB** free disk (FL2VA + REF2VA + TE + VAEs)
+- [ ] **~115 GB** if you choose Heretic TE (+15 GB)
 - [ ] Internet for first install + model download
 - [ ] Optional: Hugging Face token if a file is gated (`HF_TOKEN`)
+
+---
+
+## Optional Heretic text encoder
+
+During install you'll be offered a choice between stock and Heretic text encoder.
+
+| | Stock TE | Heretic TE |
+|---|---|---|
+| **Source** | Comfy-Org official | Community (sakamakismile mirror) |
+| **Size** | Included in base ~100 GB | +15 GB extra |
+| **Type** | Standard | Abliterated / uncensored variant |
+| **Filename** | `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` | `qwen3vl_32b_heretic_minimax_h3_nvfp4.safetensors` |
+| **Safety** | Standard safety filters | Not guaranteed to bypass all safety — user responsibility |
+
+**How it works:**
+- Both TEs use the same ComfyUI folder (`models/text_encoders/`)
+- ComfyUI's CLIPLoader picks up whichever `.safetensors` is present
+- When Heretic is selected, EZlaunch downloads it alongside the stock TE
+- In ComfyUI, select the Heretic TE in the CLIPLoader widget to use it
+
+**Source:**
+- Primary mirror: [sakamakismile/Qwen3-VL-32B-Heretic-MiniMax-H3-NVFP4](https://huggingface.co/sakamakismile/Qwen3-VL-32B-Heretic-MiniMax-H3-NVFP4)
+- Original (may be down): [Abiray/Qwen3-VL-32B-Heretic-MiniMax-H3-nvfp4-ComfyUI](https://huggingface.co/Abiray/Qwen3-VL-32B-Heretic-MiniMax-H3-nvfp4-ComfyUI)
+
+**Important:** The Heretic TE is a community "uncensored/abliterated" variant. It is not guaranteed to bypass all safety filters. Use at your own discretion.
 
 ---
 
