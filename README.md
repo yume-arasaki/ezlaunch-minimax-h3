@@ -96,7 +96,7 @@ Need **~100 GB free disk** and a solid internet connection the first time.
 
 Auto-detect reads `nvidia-smi` then demotes by measured VRAM (4090 Laptop → 16GB). System RAM under 32GB is a warning; under 24GB blocks install.
 
-See [docs/PROFILES.md](docs/PROFILES.md).
+See [docs/PROFILES.md](docs/PROFILES.md). Evidence tags (MEASURED / REPORTED / SPEC): [docs/HARDWARE-EVIDENCE.md](docs/HARDWARE-EVIDENCE.md).
 
 ---
 
