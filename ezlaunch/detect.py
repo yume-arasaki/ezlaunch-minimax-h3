@@ -164,7 +164,7 @@ def select_profile(gpu_name: str, vram_mib: int = 0) -> Optional[str]:
         except Exception:
             floor_gb = 0
         if vram_mib and floor_gb and vram_mib + 512 < floor_gb * 1024:
-            return fallback_by_vram(vram_mib, auto) or named
+            return fallback_by_vram(vram_mib, auto)
         return named
 
     return fallback_by_vram(vram_mib, auto)
