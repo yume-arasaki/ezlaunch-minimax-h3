@@ -1,0 +1,38 @@
+# Pascal GTX 10-series. No INT8 fast path. Expected ~10x slower than modern 8GB.
+id: nvidia_8gb_legacy
+display_name: "NVIDIA 8GB legacy (Pascal GTX 10-series)"
+tier: "8gb_legacy"
+vram_gb_min: 6
+ram_gb_min: 32
+ram_gb_comfort: 64
+driver_min: "470.0"
+driver_recommended: "535.0"
+torch_index_url: "https://download.pytorch.org/whl/cu128"
+torch_packages:
+  - "torch"
+  - "torchvision"
+  - "torchaudio"
+comfy_env:
+  PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
+comfy_args:
+  - "--listen"
+  - "127.0.0.1"
+  - "--port"
+  - "8188"
+  - "--lowvram"
+  - "--disable-dynamic-vram"
+  - "--reserve-vram"
+  - "1.5"
+  - "--fp16-intermediates"
+  - "--disable-cuda-malloc"
+attention_fallback_args:
+  - "--use-pytorch-cross-attention"
+sage_sm89_triton_patch: false
+clip_device: cpu
+default_megapixels: 0.3
+default_steps: 8
+notes: >
+  Pascal-only flag stack. --lowvram + --disable-dynamic-vram + --reserve-vram 1.5.
+  Do NOT also pass --disable-pinned-memory (the two fight).
+  No SageAttention. Expect ~55 min for a 5s 480p clip (one measured run).
+  Manual VAE single-device patch may still be needed — see TROUBLESHOOTING.

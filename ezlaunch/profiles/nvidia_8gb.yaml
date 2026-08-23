@@ -1,16 +1,12 @@
-# Ada 24GB (RTX 4090 / sm_89)
-id: rtx_4090
-display_name: "NVIDIA GeForce RTX 4090"
-tier: "24gb"
-match_names:
-  - "RTX 4090"
-  - "GeForce RTX 4090"
-compute_capability: [8, 9]
-vram_gb_min: 20
+# 8GB modern NVIDIA (Ampere/Ada/Blackwell): 3070, 4060 8GB, 5060 8GB
+id: nvidia_8gb
+display_name: "NVIDIA 8GB class (modern)"
+tier: "8gb"
+vram_gb_min: 7
 ram_gb_min: 32
 ram_gb_comfort: 64
-driver_min: "570.0"
-driver_recommended: "580.0"
+driver_min: "535.0"
+driver_recommended: "570.0"
 torch_index_url: "https://download.pytorch.org/whl/cu128"
 torch_packages:
   - "torch"
@@ -31,11 +27,10 @@ comfy_args:
   - "--use-sage-attention"
 attention_fallback_args:
   - "--use-pytorch-cross-attention"
-sage_sm89_triton_patch: true
+sage_sm89_triton_patch: false
 clip_device: cpu
-default_megapixels: 0.7
+default_megapixels: 0.3
 default_steps: 8
 notes: >
-  Kitchen CUDA + Sage v2. Ada may need the sm89→Triton patch.
-  Do not stack --lowvram with --disable-pinned-memory.
-  Laptop 4090 (16GB) is demoted to nvidia_16gb by VRAM.
+  8GB modern (not Pascal). 480p only. Expect 5–15 min for a 5s clip.
+  Uses --disable-pinned-memory, not --lowvram. 32GB system RAM is required.

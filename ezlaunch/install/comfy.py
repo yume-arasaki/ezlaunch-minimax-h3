@@ -1,6 +1,7 @@
 """Clone / update ComfyUI + MiniMax turbo custom node + ship workflows."""
 from __future__ import annotations
 
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -11,6 +12,34 @@ from ezlaunch.paths import comfy_dir, ensure_layout, install_root
 from ezlaunch.workflows import install_workflows
 
 COMFY_GIT = "https://github.com/comfyanonymous/ComfyUI.git"
+_MEMORY_FACTOR_RE = re.compile(
+    r"(class\s+MiniMaxH3\b.*?memory_usage_factor\s*=\s*)([0-9.]+)",
+    re.S,
+)
+
+
+def patch_minimax_memory_factor(comfy: Path, target: float = 1.0) -> str:
+    """Idempotent fix for MiniMaxH3.memory_usage_factor under-estimate.
+
+    Stock Comfy ships 0.114, which tells the allocator sampling is almost free
+    so it pins the whole DiT and OOMs. Lab recipe (and Joey's 15s 24GB notes)
+    set this to 1.0. Returns: patched | already_patched | missing | not_found.
+    """
+    path = comfy / "comfy" / "supported_models.py"
+    if not path.is_file():
+        return "missing"
+    text = path.read_text(encoding="utf-8")
+    match = _MEMORY_FACTOR_RE.search(text)
+    if not match:
+        return "not_found"
+    current = float(match.group(2))
+    if abs(current - target) < 1e-9:
+        return "already_patched"
+    patched, n = _MEMORY_FACTOR_RE.subn(lambda m: f"{m.group(1)}{target}", text, count=1)
+    if n != 1:
+        return "not_found"
+    path.write_text(patched, encoding="utf-8")
+    return "patched"
 
 
 def _git(args: list[str], cwd: Optional[Path] = None) -> None:
@@ -36,6 +65,9 @@ def ensure_comfy(root: Path | None = None, progress=None) -> Path:
             _git(["clone", "--depth", "1", COMFY_GIT, str(comfy)])
     if progress:
         progress("install", 0.35, "ComfyUI present")
+    status = patch_minimax_memory_factor(comfy)
+    if progress:
+        progress("install", 0.36, f"H3 memory_usage_factor patch: {status}")
     return comfy
 
 

@@ -48,13 +48,17 @@ ezlaunch/
 - Controlled by `EZLAUNCH_HOME` env var
 
 ## GPU Profiles
-- **RTX 4090**: Kitchen CUDA force, SageAttention v2 (Ada Triton patch), CLIP on CPU, lowvram + disable-smart-memory
-- **RTX 3090**: Same class of flags; lower megapixels if VRAM tight
-- Auto-detect via `nvidia-smi`
+- **8GB Pascal**: `--lowvram` stack, no Sage, slow-path warning
+- **8GB modern / 12GB / 16GB / 24GB / 32GB / 48GB**: `--disable-pinned-memory`, never stacked with `--lowvram`
+- **RTX 4090**: SageAttention v2 (Ada Triton patch), CLIP on CPU
+- Auto-detect via `nvidia-smi`, then VRAM demote (4090 Laptop → 16GB)
+- System RAM < 24GB blocks; < 32GB warns
+- AMD / Apple not in this branch
 
 ## Requirements
-- NVIDIA RTX 4090 or 3090 (24GB VRAM)
-- NVIDIA driver ≥570 (4090) / ≥535 (3090)
+- NVIDIA ~8GB+ (Pascal GTX 10 through 5090 / workstation)
+- NVIDIA driver ≥570 (Ada/Blackwell) / ≥535 (Ampere) / ≥470 (Pascal)
+- ~32GB system RAM (24GB blocks install)
 - ~100GB free disk
 - Python 3.10+
 - Internet for first install + model download

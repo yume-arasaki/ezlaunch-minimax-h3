@@ -1,22 +1,25 @@
 # EZlaunch MiniMax-H3 — Active Work
 
 ## Status
-- **Stage:** 0 → 1 (MVP extracted, repo initialized, Heretic TE added)
-- **Branch:** main
-- **Tests:** ✅ 42 passed, 1 skipped (macOS)
+- **Stage:** 1 (NVIDIA hardware map on `feat/h3-hardware-map`)
+- **Branch:** feat/h3-hardware-map
+- **Tests:** 56 passed, 1 skipped (macOS)
 
 ## Recent Changes
-- Extracted MVP from zip archive
-- Initialized git repo, pushed to GitHub
-- Fixed test failure on macOS (CLI wizard test assumes NVIDIA GPU)
-- Created PROJECT.md project context
-- Installed deps via uv, verified tests pass
-- **Added optional Heretic TE**: manifest entry, wizard toggle, state persistence, download gating, preflight disk check, docs, tests
+- NVIDIA tier profiles: 8gb legacy / 8gb / 12gb / 16gb / 3090 / 4090 / 5090 / 48gb
+- Unstacked `--lowvram` from `--disable-pinned-memory` on modern cards
+- Turbo default_steps 4 → 8
+- System RAM check (block <24GB, warn <32GB)
+- VRAM demote (4090 Laptop, 4060 Ti 8GB)
+- Idempotent MiniMaxH3 memory_usage_factor 0.114 → 1.0 patch
+- Heretic TE already on main
 
 ## Known Issues
-- None yet — fresh setup
+- Territory/license gate still Joey's call (not in this branch)
+- AMD / Apple / NVFP4-5090 pack not started
+- Global `--use-sage-attention` still used (KJ-scoped rewrite later)
 
 ## Next Steps
-- Joey can start working on the project
-- Ready for AI agent jobs with full context via PROJECT.md
-- GPU-specific work requires Linux/Windows environment with NVIDIA hardware
+- Review flag stacks on a real 3060/4090 box
+- Joey: license acknowledgement yes/no
+- AMD / Apple later

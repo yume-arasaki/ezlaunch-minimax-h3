@@ -6,6 +6,7 @@ import platform
 import re
 import shutil
 import subprocess
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -126,22 +127,87 @@ def load_auto_map() -> dict:
     return yaml.safe_load((profiles_dir() / "auto.yaml").read_text())
 
 
-def select_profile(gpu_name: str, vram_mib: int = 0) -> Optional[str]:
-    auto = load_auto_map()
-    lower = gpu_name.lower()
-    for row in auto.get("mappings", []):
-        if row["contains"].lower() in lower:
-            return row["profile"]
-    # unknown but ~24GB class
+def is_pascal_gtx(gpu_name: str) -> bool:
+    """GTX 10-series only. Turing 16-series is not Pascal."""
+    return bool(re.search(r"gtx\s*10\d{2}", gpu_name, re.I))
+
+
+def fallback_by_vram(vram_mib: int, auto: dict | None = None) -> Optional[str]:
+    auto = auto or load_auto_map()
+    for row in auto.get("vram_fallback") or []:
+        try:
+            if vram_mib >= int(row["min_mib"]):
+                return str(row["profile"])
+        except (KeyError, TypeError, ValueError):
+            continue
     if vram_mib >= 20000:
         return auto.get("fallback_unknown_24gb")
     return None
+
+
+def select_profile(gpu_name: str, vram_mib: int = 0) -> Optional[str]:
+    auto = load_auto_map()
+    if is_pascal_gtx(gpu_name):
+        return "nvidia_8gb_legacy"
+
+    lower = gpu_name.lower()
+    named: Optional[str] = None
+    for row in auto.get("mappings", []):
+        if row["contains"].lower() in lower:
+            named = row["profile"]
+            break
+
+    if named:
+        try:
+            prof = load_profile(named)
+            floor_gb = float(prof.get("vram_gb_min") or 0)
+        except Exception:
+            floor_gb = 0
+        if vram_mib and floor_gb and vram_mib + 512 < floor_gb * 1024:
+            return fallback_by_vram(vram_mib, auto) or named
+        return named
+
+    return fallback_by_vram(vram_mib, auto)
 
 
 def disk_free_gb(path: Path | None = None) -> float:
     path = path or Path.home()
     usage = shutil.disk_usage(path)
     return usage.free / (1024**3)
+
+
+def system_ram_gb() -> Optional[float]:
+    """Physical RAM in GiB, or None if the OS query fails."""
+    try:
+        if sys.platform == "win32":
+            import ctypes
+
+            class MEMORYSTATUSEX(ctypes.Structure):
+                _fields_ = [
+                    ("dwLength", ctypes.c_ulong),
+                    ("dwMemoryLoad", ctypes.c_ulong),
+                    ("ullTotalPhys", ctypes.c_ulonglong),
+                    ("ullAvailPhys", ctypes.c_ulonglong),
+                    ("ullTotalPageFile", ctypes.c_ulonglong),
+                    ("ullAvailPageFile", ctypes.c_ulonglong),
+                    ("ullTotalVirtual", ctypes.c_ulonglong),
+                    ("ullAvailVirtual", ctypes.c_ulonglong),
+                    ("sullAvailExtendedVirtual", ctypes.c_ulonglong),
+                ]
+
+            stat = MEMORYSTATUSEX()
+            stat.dwLength = ctypes.sizeof(MEMORYSTATUSEX)
+            if not ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat)):
+                return None
+            return stat.ullTotalPhys / (1024**3)
+        if sys.platform == "darwin":
+            out = subprocess.check_output(["sysctl", "-n", "hw.memsize"], text=True, timeout=5)
+            return int(out.strip()) / (1024**3)
+        page = os.sysconf("SC_PAGE_SIZE")
+        phys = os.sysconf("SC_PHYS_PAGES")
+        return (page * phys) / (1024**3)
+    except Exception:
+        return None
 
 
 def run_detect(min_disk_gb: float | None = None) -> DetectReport:
@@ -215,10 +281,10 @@ def run_detect(min_disk_gb: float | None = None) -> DetectReport:
 
     checks.append(
         CheckResult(
-            ok=gpu.vram_mib >= 20000,
+            ok=gpu.vram_mib >= 7000,
             title="Graphics card",
             detail=f"{gpu.name} · {gpu.vram_mib} MiB VRAM · driver {gpu.driver}",
-            fix="MVP needs RTX 4090 or 3090 (about 24 GB). Smaller cards are not supported yet.",
+            fix="Need about 8 GB VRAM or more. AMD / Apple Silicon are not in this branch yet.",
         )
     )
 
@@ -228,8 +294,8 @@ def run_detect(min_disk_gb: float | None = None) -> DetectReport:
             CheckResult(
                 ok=False,
                 title="Supported GPU profile",
-                detail=f"No MVP profile for {gpu.name}",
-                fix=load_auto_map().get("unsupported_message", "Use 4090 or 3090."),
+                detail=f"No NVIDIA profile for {gpu.name}",
+                fix=load_auto_map().get("unsupported_message", "Need an NVIDIA card ~8GB+."),
             )
         )
     else:
@@ -249,6 +315,52 @@ def run_detect(min_disk_gb: float | None = None) -> DetectReport:
                 title="NVIDIA driver",
                 detail=f"Installed {gpu.driver} (need ≥ {dmin}, recommend {prof.get('driver_recommended')})",
                 fix="Update NVIDIA driver from the official NVIDIA site, then reboot.",
+            )
+        )
+        if prof.get("tier") == "8gb_legacy":
+            checks.append(
+                CheckResult(
+                    ok=True,
+                    title="Pascal speed warning",
+                    detail="GTX 10-series has no INT8 fast path — expect ~10× slower than a modern 8GB card (~55 min for 5s @ 480p).",
+                    fix="A used RTX 3060 12GB or 3070 8GB is a much better H3 box.",
+                )
+            )
+
+    ram = system_ram_gb()
+    if ram is None:
+        checks.append(
+            CheckResult(
+                ok=True,
+                title="System RAM (warning)",
+                detail="Could not measure system RAM. H3 needs about 32 GB.",
+                fix="If install later dies with a kernel OOM, add RAM or close other apps. 32 GB is the practical floor.",
+            )
+        )
+    elif ram < 24:
+        checks.append(
+            CheckResult(
+                ok=False,
+                title="System RAM",
+                detail=f"About {ram:.0f} GB RAM (need ≥ 24 GB, 32 GB practical floor)",
+                fix="H3 OOMs on host RAM, not just VRAM. 32 GB is the practical floor; 64 GB is comfortable.",
+            )
+        )
+    elif ram < 32:
+        checks.append(
+            CheckResult(
+                ok=True,
+                title="System RAM (warning)",
+                detail=f"About {ram:.0f} GB RAM — tight. 32 GB is the practical floor.",
+                fix="Launch uses --disable-pinned-memory so 31 GB can work. Close other apps. 64 GB is comfortable.",
+            )
+        )
+    else:
+        checks.append(
+            CheckResult(
+                ok=True,
+                title="System RAM",
+                detail=f"About {ram:.0f} GB RAM",
             )
         )
 

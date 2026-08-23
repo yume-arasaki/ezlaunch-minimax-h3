@@ -91,14 +91,33 @@ Or enable OS long paths (`LongPathsEnabled` registry) — optional.
 
 ---
 
-## “Driver too old”
+## Driver too old
 
 | GPU | Minimum | Recommended |
 |-----|---------|-------------|
-| RTX 4090 | 570+ | 580+ |
-| RTX 3090 | 535+ | 550+ |
+| RTX 50 / 4090 | 570+ | 580+ |
+| RTX 40 (non-4090) | 550+ | 570+ |
+| RTX 30 / 20 | 535+ | 550+ |
+| GTX 10 Pascal | 470+ | 535+ |
 
 Always **reboot** after a driver change before re-running EZlaunch.
+
+---
+
+## Kernel OOM / “Comfy just vanished” / docker says OOMKilled=false
+
+ComfyUI pins ~90% of system RAM by default. The kernel then SIGKILLs python.
+`dmesg -T | grep oom-kill` is the truth.
+
+Modern NVIDIA profiles already pass `--disable-pinned-memory`. If you still die:
+
+1. You need ~32 GB host RAM (24 GB blocks the installer; 31 GB can work)
+2. Do **not** add `--lowvram` on top of `--disable-pinned-memory` — they fight
+3. Pascal GTX 10-series is the exception: it uses `--lowvram` and must **not** also pass `--disable-pinned-memory`
+
+EZlaunch also patches ComfyUI `MiniMaxH3.memory_usage_factor` from `0.114` → `1.0`
+on install and every launch. Without that, the allocator thinks sampling is free
+and jams the whole DiT into VRAM.
 
 ---
 

@@ -1,16 +1,12 @@
-# Ada 24GB (RTX 4090 / sm_89)
-id: rtx_4090
-display_name: "NVIDIA GeForce RTX 4090"
-tier: "24gb"
-match_names:
-  - "RTX 4090"
-  - "GeForce RTX 4090"
-compute_capability: [8, 9]
-vram_gb_min: 20
+# 16GB NVIDIA class: 4060 Ti 16, 4080, 4070 Ti Super, 5060 Ti 16, 5070 Ti, 5080, 4090 Laptop
+id: nvidia_16gb
+display_name: "NVIDIA 16GB class"
+tier: "16gb"
+vram_gb_min: 14
 ram_gb_min: 32
-ram_gb_comfort: 64
-driver_min: "570.0"
-driver_recommended: "580.0"
+ram_gb_comfort: 48
+driver_min: "550.0"
+driver_recommended: "570.0"
 torch_index_url: "https://download.pytorch.org/whl/cu128"
 torch_packages:
   - "torch"
@@ -31,11 +27,11 @@ comfy_args:
   - "--use-sage-attention"
 attention_fallback_args:
   - "--use-pytorch-cross-attention"
-sage_sm89_triton_patch: true
+sage_sm89_triton_patch: false
 clip_device: cpu
-default_megapixels: 0.7
+default_megapixels: 0.5
 default_steps: 8
 notes: >
-  Kitchen CUDA + Sage v2. Ada may need the sm89→Triton patch.
-  Do not stack --lowvram with --disable-pinned-memory.
-  Laptop 4090 (16GB) is demoted to nvidia_16gb by VRAM.
+  16GB runs pruned INT8 via offload. Stay near 480p–720p-class canvases.
+  Native 1080p has been measured to OOM on 5060 Ti 16GB. Turbo 8-step is the default.
+  --fast-disk helps only on boxes with lots of RAM + fast NVMe (not default).

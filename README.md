@@ -6,7 +6,7 @@ Double-click → Install engine → Download models → Launch.
 
 | Supported (MVP) | |
 |-----------------|--|
-| **GPUs** | NVIDIA **RTX 4090** · **RTX 3090** (24 GB class) |
+| **GPUs** | NVIDIA **8GB+** (Pascal GTX 10 through RTX 5090 / workstation). AMD + Apple later. |
 | **OS** | **Windows 10/11** · **Linux** (Ubuntu 22.04-class) |
 | **Output** | Local ComfyUI with **t2v · i2v · ref2v** Turbo workflows (video + audio) |
 
@@ -82,21 +82,29 @@ Need **~100 GB free disk** and a solid internet connection the first time.
 
 ---
 
-## GPU profiles (MVP)
+## GPU profiles
 
-| Card | What EZlaunch does |
+| Card class | What EZlaunch does |
 |------|---------------------|
-| **RTX 4090** | Kitchen CUDA force · SageAttention v2 (Ada Triton patch if needed) · CLIP on CPU · lowvram + disable-smart-memory |
-| **RTX 3090** | Same class of flags; first smoke may use slightly lower megapixels if VRAM is tight |
+| **8GB Pascal (GTX 10)** | `--lowvram` stack, no Sage, ~55 min for 5s @ 480p. Honest warning. |
+| **8GB modern (3070 / 5060)** | `--disable-pinned-memory` + Sage. 480p. ~5–15 min. |
+| **10–12GB (3060 / 4070 / 5070)** | Same flags. RAM + PCIe offload is the limiter. Turbo 8-step. |
+| **16GB (4080 / 5080 / 5070 Ti)** | Same flags. Stay off native 1080p. |
+| **24GB (3090 / 4090)** | Kitchen CUDA · Sage · CLIP on CPU. **No** `--lowvram` (fights pinned-memory). |
+| **32GB (5090)** | Same pack. 64GB host RAM recommended. |
+| **48GB+ workstation** | Same pack, higher default megapixels. |
 
-Auto-detect reads `nvidia-smi`. You can also force a profile later (advanced docs).
+Auto-detect reads `nvidia-smi` then demotes by measured VRAM (4090 Laptop → 16GB). System RAM under 32GB is a warning; under 24GB blocks install.
+
+See [docs/PROFILES.md](docs/PROFILES.md).
 
 ---
 
 ## Requirements checklist
 
-- [ ] NVIDIA **4090** or **3090**
-- [ ] Driver new enough (4090 ≥ **570**, 3090 ≥ **535**)
+- [ ] NVIDIA GPU **~8GB+** (RTX 20/30/40/50 or GTX 10-series)
+- [ ] Driver new enough (Blackwell/Ada ≥ **570**, Ampere ≥ **535**, Pascal ≥ **470**)
+- [ ] **~32 GB system RAM** (24 GB blocks install; 31 GB can work with `--disable-pinned-memory`)
 - [ ] **~100 GB** free disk (FL2VA + REF2VA + TE + VAEs)
 - [ ] **~115 GB** if you choose Heretic TE (+15 GB)
 - [ ] Internet for first install + model download
@@ -175,13 +183,14 @@ This project is structured for AI coding agent collaboration:
 
 ## Roadmap
 
-- [x] 4090 / 3090 MVP profiles  
-- [x] Double-click Windows + Linux entry  
-- [x] Auto HF model download  
-- [x] Shipped **t2v / i2v / ref2v** turbo workflows + **comfy-up** launch  
-- [ ] More GPUs (4080, 3080, …)  
-- [ ] Offline USB pack  
-- [ ] One-click example prompt pack  
+- [x] 4090 / 3090 MVP profiles
+- [x] NVIDIA 8 / 12 / 16 / 24 / 32 / 48GB tier profiles
+- [x] Double-click Windows + Linux entry
+- [x] Auto HF model download
+- [x] Shipped **t2v / i2v / ref2v** turbo workflows + **comfy-up** launch
+- [ ] AMD / Apple Silicon
+- [ ] Offline USB pack
+- [ ] One-click example prompt pack
 
 ---
 
