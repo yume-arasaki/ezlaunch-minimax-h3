@@ -32,5 +32,8 @@ clip_device: cpu
 default_megapixels: 0.3
 default_steps: 8
 notes: >
-  8GB modern (not Pascal). 480p only. Expect 5–15 min for a 5s clip.
-  Uses --disable-pinned-memory, not --lowvram. 32GB system RAM is required.
+  8GB modern (not Pascal). 480p preferred. 32GB system RAM required.
+  Uses --disable-pinned-memory, not --lowvram.
+  Runs confirmed (5060 Laptop 8GB + 32GB, CUDA 13.2: 15s @ 864x480, 10s @ ~960x544,
+  5s ~720p; FP8 and INT8 both shown). No verified wall-clock on our Comfy-Org INT8
+  pack — treat 5-15 min/5s as direction, not a certified number.

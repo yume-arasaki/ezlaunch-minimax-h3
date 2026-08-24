@@ -33,6 +33,15 @@ default_megapixels: 0.4
 default_steps: 8
 notes: >
   Binding constraint is system RAM + PCIe offload, not the 12GB itself.
-  Transformer is ~19.5 GiB — part of it streams every step. 32GB RAM required,
+  Transformer is ~19.5 GiB — part streams every step. 32GB RAM required,
   64GB is the real comfort fix. Default 480p-class + Turbo 8-step.
   Do not stack --lowvram with --disable-pinned-memory.
+
+  Community timings (Hamster 2026-08-24, n=1 each unless noted):
+  - 3080 10GB + 32GB: 5s @ ~1.2MP (1216x672) ~15 min — settings unknown,
+    "it finishes" note only, not a default recipe. SLA-node step-time path exists.
+  - 5070 12GB: 10s @ 864x480 ~15 min (n=1); 6s @ 1.0MP (1376x768) ~35 min
+    on FP8 quant (n=1). Our INT8 pack expected faster. 64GB RAM in both runs.
+  - 4070/4070 Super 12GB + 32-64GB: 5s @ 0.4-0.9MP in 3-7 min range with
+    Turbo + EasyCache (guide + community). 15s scales to 15-25+ min.
+    64GB RAM recommended for comfort.
