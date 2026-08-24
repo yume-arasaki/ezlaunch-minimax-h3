@@ -1,0 +1,68 @@
+card                                         arch        VRAM    bw profile           verdict        evidence
+----------------------------------------------------------------------------------------------------------------------------------
+RTX 2060                                     turing      6144   336 REJECT            REJECT         SPEC 6GB below installer floor
+RTX 2060                                     turing     12288   336 nvidia_12gb       ACCEPT         SPEC 2060 12GB refresh — promote up
+RTX 2060 SUPER                               turing      8192   336 nvidia_8gb        ACCEPT-SLOW    SPEC 2060 Super is 8GB
+RTX 2070                                     turing      8192   448 nvidia_8gb        ACCEPT-SLOW    SPEC 8GB
+RTX 2070 SUPER                               turing      8192   448 nvidia_8gb        ACCEPT-SLOW    SPEC 8GB
+RTX 2080                                     turing      8192   448 nvidia_8gb        ACCEPT-SLOW    SPEC 8GB
+RTX 2080 SUPER                               turing      8192   496 nvidia_8gb        ACCEPT-SLOW    SPEC 8GB
+RTX 2080 Ti                                  turing     11264   616 nvidia_12gb       ACCEPT         SPEC 11GB Turing
+TITAN RTX                                    turing     24576   672 rtx_3090          ACCEPT-24GB    SPEC 24GB Turing Titan
+RTX 3050                                     ampere      6144   224 REJECT            REJECT         SPEC 3050 6GB below floor
+RTX 3050                                     ampere      8192   224 nvidia_8gb        ACCEPT-SLOW    SPEC 3050 8GB
+RTX 3060                                     ampere      8192   360 nvidia_8gb        ACCEPT-SLOW    SPEC 3060 8GB variant — demote
+RTX 3060                                     ampere     12288   360 nvidia_12gb       ACCEPT         MEASURED 3060 12GB 4.5min Turbo8 @864x480 / smeltcore + Comf
+RTX 3060 Ti                                  ampere      8192   448 nvidia_8gb        ACCEPT-SLOW    SPEC 3060 Ti is 8GB
+RTX 3070                                     ampere      8192   448 nvidia_8gb        ACCEPT-SLOW    MEASURED 3070 8GB ~6min / Tensor Alchemist + YouTube 401s
+RTX 3070 Ti                                  ampere      8192   608 nvidia_8gb        ACCEPT-SLOW    SPEC 3070 Ti 8GB
+RTX 3070 Ti                                  ampere     16384   608 nvidia_16gb       ACCEPT         SPEC 3070 Ti 16GB refresh — promote up
+RTX 3080                                     ampere     10240   760 nvidia_12gb       ACCEPT         MEASURED 3080 10GB 5s@1216x672 ~15min 32GB (catles n=1); SLA
+RTX 3080                                     ampere     12288   760 nvidia_12gb       ACCEPT         SPEC 3080 12GB variant same tier
+RTX 3080 Ti                                  ampere     12288   912 nvidia_12gb       ACCEPT         SPEC 3080 Ti is 12GB
+RTX 3090                                     ampere     24576   936 rtx_3090          ACCEPT-24GB    MEASURED tonyd2wild 4m26s
+RTX 3090 Ti                                  ampere     24576  1008 rtx_3090          ACCEPT-24GB    SPEC 3090 Ti same tier
+RTX 4060                                     ada         8188   272 nvidia_8gb        ACCEPT-SLOW    SPEC 8GB Ada → 8gb modern
+RTX 4060 Ti                                  ada         8188   288 nvidia_8gb        ACCEPT-SLOW    SPEC 4060 Ti 8GB demote from 16GB name hit
+RTX 4060 Ti                                  ada        16380   288 nvidia_16gb       ACCEPT         REPORTED 16GB class / Hamster 16GB row
+RTX 4070                                     ada        12282   504 nvidia_12gb       ACCEPT         MEASURED guide 12GB class: 20-step 1006s / Turbo4+EasyCache 
+RTX 4070 SUPER                               ada        12282   504 nvidia_12gb       ACCEPT         SPEC 4070 Super 12GB / community 3-7 min 5s @0.4-0.9MP
+RTX 4070 Ti                                  ada        12282   504 nvidia_12gb       ACCEPT         SPEC 4070 Ti is 12GB
+RTX 4070 Ti SUPER                            ada        16376   672 nvidia_16gb       ACCEPT         SPEC 4070 Ti Super is 16GB
+RTX 4080                                     ada        16376   716 nvidia_16gb       ACCEPT         SPEC Hamster 16GB row
+RTX 4080 SUPER                               ada        16376   736 nvidia_16gb       ACCEPT         SPEC 4080 Super same tier
+RTX 4090                                     ada        24564  1008 rtx_4090          ACCEPT-24GB    MEASURED Joey 4090 field run
+RTX 4090 D                                   ada        24564  1008 rtx_4090          ACCEPT-24GB    SPEC 4090 D (China) same tier
+RTX 5050                                     blackwell   8192   224 nvidia_8gb        ACCEPT-SLOW    SPEC 5050 is 8GB (GDDR6)
+RTX 5060                                     blackwell   8192   320 nvidia_8gb        ACCEPT-SLOW    MEASURED 5060 Laptop 8GB runs (Tensor Alchemist)
+RTX 5060 Ti                                  blackwell   8188   448 nvidia_8gb        ACCEPT-SLOW    SPEC 5060 Ti 8GB demote
+RTX 5060 Ti                                  blackwell  16384   448 nvidia_16gb       ACCEPT         MEASURED 5060 Ti 16GB runs 1344x768, OOM native 1080p / Jarv
+RTX 5070                                     blackwell  12288   672 nvidia_12gb       ACCEPT         MEASURED 5070 12GB 10s@864x480 ~15min (MerchForNobody n=1); 
+RTX 5070 Ti                                  blackwell  16384   896 nvidia_16gb       ACCEPT         REPORTED UdonJP ~14.2–14.4 GiB peak
+RTX 5080                                     blackwell  16384   960 nvidia_16gb       ACCEPT         MEASURED x4 (Hamster 08-24): 10s@480p 3min NVFP4; 5.17s@0.9M
+RTX 5090                                     blackwell  32607  1792 rtx_5090          ACCEPT-32GB+   MEASURED zenn 76.5s T2V; wan2-7 31.8GB peak
+RTX 5090 D                                   blackwell  32607  1792 rtx_5090          ACCEPT-32GB+   SPEC 5090 D (China) same tier
+RTX 4050 Laptop GPU                          ada         6144     ? REJECT            REJECT         SPEC 4050 Laptop is 6GB < floor
+RTX 4060 Laptop GPU                          ada         8188   272 nvidia_8gb        ACCEPT-SLOW    SPEC 4060 Laptop 8GB
+RTX 4070 Laptop GPU                          ada         8188   504 nvidia_8gb        ACCEPT-SLOW    SPEC 4070 Laptop 8GB
+RTX 4080 Laptop GPU                          ada        12288   716 nvidia_12gb       ACCEPT         SPEC 4080 Laptop 12GB
+RTX 4090 Laptop GPU                          ada        16384  1008 nvidia_16gb       ACCEPT         SPEC laptop 16GB demote
+RTX 5060 Laptop GPU                          blackwell   8192   320 nvidia_8gb        ACCEPT-SLOW    MEASURED 5060 Laptop 8GB runs (Tensor Alchemist)
+RTX 5070 Laptop GPU                          blackwell   8192   672 nvidia_8gb        ACCEPT-SLOW    SPEC 5070 Laptop 8GB/12GB variants
+RTX 5080 Laptop GPU                          blackwell  16384   960 nvidia_16gb       ACCEPT         SPEC 5080 Laptop 16GB
+RTX 5090 Laptop GPU                          blackwell  24576  1792 rtx_3090          ACCEPT-24GB    SPEC 5090 Laptop 24GB — demote to 24GB tier
+RTX PRO 4000 Blackwell                       blackwell  24576   672 rtx_3090          ACCEPT-24GB    SPEC PRO 4000 24GB — vram fallback
+RTX PRO 4500 Blackwell                       blackwell  32768   896 rtx_5090          ACCEPT-32GB+   SPEC PRO 4500 32GB
+RTX PRO 5000 Blackwell                       blackwell  49152  1344 nvidia_48gb       ACCEPT-32GB+   SPEC PRO 5000 48GB
+RTX PRO 6000 Blackwell                       blackwell  98304  1792 nvidia_48gb       ACCEPT-32GB+   SPEC PRO 6000 96GB
+RTX 6000 Ada Generation                      ada        49140   960 nvidia_48gb       ACCEPT-32GB+   MEASURED workstation <72s / Hamster
+RTX 5000 Ada Generation                      ada        32768   896 rtx_5090          ACCEPT-32GB+   SPEC RTX 5000 Ada 32GB
+RTX A4000                                    ampere     16384   448 nvidia_16gb       ACCEPT         SPEC A4000 16GB
+RTX A4500                                    ampere     20480   640 rtx_3090          ACCEPT-24GB    SPEC A4500 20GB
+RTX A5000                                    ampere     24576   768 rtx_3090          ACCEPT-24GB    SPEC A5000 24GB
+RTX A6000                                    ampere     49140   768 nvidia_48gb       ACCEPT-32GB+   SPEC A6000 48GB
+RTX Mystery 24GB                             unknown    24576     ? rtx_3090          ACCEPT-24GB    SPEC unknown 24GB fallback
+GTX 1080 Ti                                  pascal     11264   484 nvidia_8gb_legacy ACCEPT-SLOW    MEASURED Pascal ~55min / Hamster 8GB legacy
+GTX 1060 6GB                                 pascal      6144   192 nvidia_8gb_legacy ACCEPT-SLOW    SPEC Pascal name-lock even at 6GB
+GTX 1660 SUPER                               unknown     6144   192 REJECT            REJECT         SPEC Turing 16-series is not Pascal; 6GB below 7GB floor
+GTX 1080                                     pascal      8192   320 nvidia_8gb_legacy ACCEPT-SLOW    SPEC GTX 1080 is Pascal 8GB
