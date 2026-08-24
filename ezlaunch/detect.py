@@ -145,6 +145,13 @@ def fallback_by_vram(vram_mib: int, auto: dict | None = None) -> Optional[str]:
     return None
 
 
+def _profile_floor_gb(pid: str) -> float:
+    try:
+        return float(load_profile(pid).get("vram_gb_min") or 0.0)
+    except Exception:
+        return 0.0
+
+
 def select_profile(gpu_name: str, vram_mib: int = 0) -> Optional[str]:
     auto = load_auto_map()
     if is_pascal_gtx(gpu_name):
@@ -157,17 +164,22 @@ def select_profile(gpu_name: str, vram_mib: int = 0) -> Optional[str]:
             named = row["profile"]
             break
 
+    out = named
     if named:
-        try:
-            prof = load_profile(named)
-            floor_gb = float(prof.get("vram_gb_min") or 0)
-        except Exception:
-            floor_gb = 0
+        floor_gb = _profile_floor_gb(named)
+        # Demote DOWN when the name profile is fatter than measured VRAM.
         if vram_mib and floor_gb and vram_mib + 512 < floor_gb * 1024:
-            return fallback_by_vram(vram_mib, auto)
-        return named
+            out = fallback_by_vram(vram_mib, auto)
+        else:
+            # Promote UP when measured VRAM clearly outgrows the name profile
+            # (3070 Ti 16GB, RTX 2060 12GB — same name, fatter VRAM).
+            best = fallback_by_vram(vram_mib, auto)
+            if best and vram_mib and _profile_floor_gb(best) > _profile_floor_gb(named):
+                out = best
 
-    return fallback_by_vram(vram_mib, auto)
+    if out is None and vram_mib:
+        out = fallback_by_vram(vram_mib, auto)
+    return out
 
 
 def disk_free_gb(path: Path | None = None) -> float:

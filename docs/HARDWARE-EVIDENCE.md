@@ -25,7 +25,7 @@ Tags: **MEASURED** timed on that class · **REPORTED** community · **SPEC** doc
 |---|---|---|---|
 | GTX 1080 Ti | `nvidia_8gb_legacy` | MEASURED ~55 min (Hamster, 1 run) | n=1 |
 | 3070 8GB | `nvidia_8gb` | MEASURED ~6 min / 401s (YouTube swap test) | canvas/steps not fully specified |
-| 5060 8GB | `nvidia_8gb` | MEASURED runs: 15s@480p, 10s@~960x544, 5s~720p on 5060 Laptop 8GB + 32GB (Tensor Alchemist) | **no wall-clock on our INT8 pack** — 5-15 min directional only |
+| 5060 8GB | `nvidia_8gb` | MEASURED runs: 15s@480p, 10s@~960x544, 5s~720p on 5060 Laptop 8GB + 32GB (Tensor Alchemist) | **no wall-clock on our INT8 pack** — directional only |
 | 3060 12GB | `nvidia_12gb` | MEASURED 4.5 min Turbo8 @864×480 (smeltcore / Comfy disc.) | stock 20-step @480p unpublished |
 | 3080 10GB | `nvidia_12gb` | MEASURED 5s @ 1216×672 ~15 min, 32GB RAM (catles, n=1); SLA-node path 58.5s→29.7s/step (Toshi) | settings unknown, not a default recipe |
 | 4070 / 4070 Super 12GB | `nvidia_12gb` | MEASURED guide (shiqikuangsan31): 20-step 1006s, Turbo4+EasyCache 420s @0.94MP; community 3-7 min 5s @0.4-0.9MP | no exact match to locked recipe (guide uses --lowvram+--disable-mmap) |
@@ -37,6 +37,10 @@ Tags: **MEASURED** timed on that class · **REPORTED** community · **SPEC** doc
 | 4090 24GB | `rtx_4090` | MEASURED Joey field run | — |
 | 5090 32GB | `rtx_5090` | MEASURED 76.5s T2V (zenn); ~31.8GB peak (wan2-7) | NVFP4 pack not installed yet |
 | 6000 Ada | `nvidia_48gb` | MEASURED <72s (Hamster workstation) | — |
+
+## Full catalog coverage (dry-run locked)
+
+66 nvidia-smi card strings, every RTX 20/30/40/50 desktop + laptop + RTX PRO workstation variant, route to the right tier. Detection is **name first, then VRAM-adjust** (demote if the card is thinner than the name suggests — 4090 Laptop 16GB → 16gb; **promote if the card is fatter than the name suggests — 3070 Ti 16GB → 16gb, 2060 12GB → 12gb**). 6GB cards reject. See `tests/test_hardware_dry_run.py`.
 
 ## Open questions for Hamster (Twitter / X)
 

@@ -1,7 +1,7 @@
 # Name substrings → profile id (first match wins, case-insensitive).
 # More specific names must come first (5070 Ti before 5070, 4060 Ti before 4060).
-# After a name hit, detect.py demotes if measured VRAM is below the profile floor
-# (e.g. 4060 Ti 8GB must not stay on the 16GB profile).
+# select_profile() then demotes DOWN or promotes UP by measured VRAM
+# (4090 Laptop 16GB → 16gb; 3070 Ti 16GB → 16gb; 2060 12GB → 12gb).
 mappings:
   - contains: "5090"
     profile: rtx_5090
@@ -25,6 +25,8 @@ mappings:
     profile: nvidia_16gb
   - contains: "5060"
     profile: nvidia_8gb
+  - contains: "5050"
+    profile: nvidia_8gb
   - contains: "4080"
     profile: nvidia_16gb
   - contains: "4070 Ti Super"
@@ -47,21 +49,29 @@ mappings:
     profile: nvidia_12gb
   - contains: "2080"
     profile: nvidia_8gb
+  - contains: "2070 Super"
+    profile: nvidia_8gb
   - contains: "2070"
+    profile: nvidia_8gb
+  - contains: "2060 Super"
     profile: nvidia_8gb
   - contains: "2060"
     profile: nvidia_8gb
+  - contains: "TITAN RTX"
+    profile: rtx_3090
   - contains: "A6000"
     profile: nvidia_48gb
-  - contains: "RTX 6000"
-    profile: nvidia_48gb
+  - contains: "RTX PRO 4500"
+    profile: rtx_5090
   - contains: "RTX PRO 6000"
+    profile: nvidia_48gb
+  - contains: "RTX PRO 5000"
+    profile: nvidia_48gb
+  - contains: "RTX 6000"
     profile: nvidia_48gb
   - contains: "RTX 5000"
     profile: nvidia_48gb
   - contains: "A5000"
-    profile: nvidia_16gb
-  - contains: "TITAN RTX"
     profile: rtx_3090
 
 # Measured VRAM → profile when the name is unknown or the name-hit is too fat.
