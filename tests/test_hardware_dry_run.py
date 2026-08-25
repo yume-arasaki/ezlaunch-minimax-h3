@@ -248,3 +248,28 @@ def test_driver_gates_match_profile_mins():
     assert driver_at_least("535.98", load_profile("rtx_3090")["driver_min"])
     assert not driver_at_least("535.98", load_profile("rtx_4090")["driver_min"])
     assert driver_at_least("470.82", load_profile("nvidia_8gb_legacy")["driver_min"])
+
+
+def test_pascal_uses_cu126_torch():
+    """cu128 wheels dropped Pascal (sm_60/61) in torch 2.8 — legacy MUST be cu126."""
+    prof = load_profile("nvidia_8gb_legacy")
+    assert "cu126" in prof["torch_index_url"], prof["torch_index_url"]
+
+
+def test_windows_bat_refuses_store_stub():
+    """EZlaunch.bat must refuse the Microsoft Store python stub early."""
+    bat = (ROOT / "scripts" / "EZlaunch.bat").read_text(encoding="utf-8", errors="replace").lower()
+    assert "windowsapps" in bat
+    assert "app execution aliases" in bat
+    assert "hf_hub_disable_symlinks" in bat
+    assert "py -3" in bat or 'py -3' in bat
+
+
+def test_comfy_up_bat_launches_venv_python():
+    """Windows venv python path must be Scripts/python.exe."""
+    from ezlaunch.paths import venv_python
+    from unittest import mock
+
+    with mock.patch("ezlaunch.paths.sys.platform", "win32"):
+        assert venv_python().name == "python.exe"
+        assert "Scripts" in str(venv_python())

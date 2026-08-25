@@ -122,7 +122,7 @@ During install you'll be offered a choice between stock and Heretic text encoder
 | **Size** | Included in base ~100 GB | +15 GB extra |
 | **Type** | Standard | Abliterated / uncensored variant |
 | **Filename** | `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` | `qwen3vl_32b_heretic_minimax_h3_nvfp4.safetensors` |
-| **Safety** | Standard safety filters | Not guaranteed to bypass all safety — user responsibility |
+| **Safety** | Standard safety filters | Community report, may not uncensor much — not guaranteed to bypass all safety. User responsibility |
 
 **How it works:**
 - Both TEs use the same ComfyUI folder (`models/text_encoders/`)
@@ -134,7 +134,7 @@ During install you'll be offered a choice between stock and Heretic text encoder
 - Primary mirror: [sakamakismile/Qwen3-VL-32B-Heretic-MiniMax-H3-NVFP4](https://huggingface.co/sakamakismile/Qwen3-VL-32B-Heretic-MiniMax-H3-NVFP4)
 - Original (may be down): [Abiray/Qwen3-VL-32B-Heretic-MiniMax-H3-nvfp4-ComfyUI](https://huggingface.co/Abiray/Qwen3-VL-32B-Heretic-MiniMax-H3-nvfp4-ComfyUI)
 
-**Important:** The Heretic TE is a community "uncensored/abliterated" variant. It is not guaranteed to bypass all safety filters. Use at your own discretion.
+**Important:** The Heretic TE is a community "uncensored/abliterated" variant. Community reports indicate it **may not uncensor much** in practice, and it is not guaranteed to bypass all safety filters. It costs ~15 GB extra disk. Use at your own discretion.
 
 ---
 

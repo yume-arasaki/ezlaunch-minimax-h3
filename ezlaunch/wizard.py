@@ -82,34 +82,38 @@ def step_install_engine(root: Path | None = None, progress: Optional[ProgressCb]
     return {"ok": True, "profile_id": profile_id, "sage_status": st.get("sage_status")}
 
 
-def step_select_te_variant(root: Path | None = None) -> dict:
-    """Choose text encoder variant: stock (default) or Heretic (optional)."""
+def step_select_te_variant(root: Path | None = None, decision: str | None = None) -> dict:
+    """Choose text encoder variant: stock (default) or Heretic (optional).
+
+    decision: "stock" | "heretic" — used by the GUI wizard, which has no
+    console/stdin and must not call input(). CLI leaves it None → prompts.
+    """
     root = ensure_layout(root)
     st = load_state(root)
-    # Already decided? Return current choice.
-    current = st.get("te_variant", "stock")
-    if current in ("stock", "heretic"):
-        return {"te_variant": current, "changed": False}
+    # Already decided (explicit user choice)? Return current.
+    if st.get("te_choice_made") and st.get("te_variant") in ("stock", "heretic"):
+        return {"te_variant": st["te_variant"], "changed": False}
 
-    # First time: present choice
-    print()
-    print("--- Text encoder choice ---")
-    print()
-    print("  1) Stock TE (recommended)")
-    print("     Comfy-Org's official text encoder")
-    print()
-    print("  2) Heretic TE (advanced)")
-    print("     Community abliterated/uncensored variant")
-    print("     ~15 GB extra · not guaranteed to bypass all safety")
-    print("     · user responsibility · filename matches stock")
-    print()
-    ans = input("Choose [1/2] (default 1): ").strip()
-    if ans in ("2",):
-        st["te_variant"] = "heretic"
-    else:
-        st["te_variant"] = "stock"
+    if decision not in ("stock", "heretic"):
+        # First time: present choice (CLI path only)
+        print()
+        print("--- Text encoder choice ---")
+        print()
+        print("  1) Stock TE (recommended)")
+        print("     Comfy-Org's official text encoder")
+        print()
+        print("  2) Heretic TE (advanced)")
+        print("     Community abliterated/uncensored variant")
+        print("     ~15 GB extra · may not uncensor much")
+        print("     · user responsibility · filename matches stock")
+        print()
+        ans = input("Choose [1/2] (default 1): ").strip()
+        decision = "heretic" if ans in ("2",) else "stock"
+
+    st["te_variant"] = decision
+    st["te_choice_made"] = True
     save_state(st, root)
-    return {"te_variant": st["te_variant"], "changed": True}
+    return {"te_variant": decision, "changed": True}
 
 
 def step_download_models(root: Path | None = None, progress: Optional[ProgressCb] = None) -> dict:

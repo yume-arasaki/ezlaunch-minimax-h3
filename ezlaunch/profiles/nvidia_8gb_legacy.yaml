@@ -7,7 +7,9 @@ ram_gb_min: 32
 ram_gb_comfort: 64
 driver_min: "470.0"
 driver_recommended: "535.0"
-torch_index_url: "https://download.pytorch.org/whl/cu128"
+# CRITICAL: cu128 wheels dropped Pascal (sm_60/61) in torch 2.8.
+# Pascal MUST use cu126 (still ships sm_50–sm_61 kernels).
+torch_index_url: "https://download.pytorch.org/whl/cu126"
 torch_packages:
   - "torch"
   - "torchvision"
