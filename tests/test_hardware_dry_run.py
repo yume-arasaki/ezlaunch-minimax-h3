@@ -69,7 +69,7 @@ CARDS = [
     ("NVIDIA GeForce RTX 4070 Ti SUPER", 16376, "560.70", "nvidia_16gb", "SPEC 4070 Ti Super is 16GB"),
     ("NVIDIA GeForce RTX 4080", 16376, "560.70", "nvidia_16gb", "SPEC Hamster 16GB row"),
     ("NVIDIA GeForce RTX 4080 SUPER", 16376, "560.70", "nvidia_16gb", "SPEC 4080 Super same tier"),
-    ("NVIDIA GeForce RTX 4090", 24564, "580.82", "rtx_4090", "MEASURED Joey 4090 field run"),
+    ("NVIDIA GeForce RTX 4090", 24564, "580.82", "rtx_4090", "MEASURED (ours): 5s@0.7MP 4-step 90.6s v2 stack; 15s@0.7MP 8-step ~8 min"),
     ("NVIDIA GeForce RTX 4090 D", 24564, "580.82", "rtx_4090", "SPEC 4090 D (China) same tier"),
 
     # --- RTX 50 series (Blackwell) ---

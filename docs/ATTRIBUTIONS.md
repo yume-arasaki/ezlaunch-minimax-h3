@@ -15,6 +15,10 @@ Compile: `workspace/drafts/ezlaunch-h3-hardware-compile-2026-08-22.md`
 | Item | Source |
 |---|---|
 | Tier ladder (8GB→server) | our H3 hardware map research Aug 6–8 + Drop-Your-GPU community data Aug 11 (25K+ views) + Joey's 4090 field run Aug 4 |
+| **4090 5s @ 0.7MP 4-step → 90.6s** (v2 stack: driver 580.178.04/CUDA 13, torch cu128, kitchen FORCE_CUDA, Sage v2 sm89→Triton, CLIP CPU) | **field-run verified (ours, Aug 10–11)** |
+| 4090 5s @ 0.7MP 10-step → 167s (Sage v1.0.6, INT8 ConvRot) | field-run verified (ours, Aug 4) |
+| 4090 5.17s @ 0.7MP 8-step Heretic TE → 140.3s | field-run verified (ours, Aug 13) |
+| **4090 15s @ 0.7MP 8-step → ~8 min** | field-run verified (ours). The "30 min" row was a mislabeled 10s @ 1.0MP — corrected |
 | 3090 4m26s | tonyd2wild/minimax-h3-local |
 | 5090 76.5s T2V warm · 10s@480p 175s | zenn.dev 5090 benchmark suite (ai-muninn 5090 bench corroborates) |
 | 5090 ~31.8GB peak, pruned INT8 fastest, full-vs-pruned gap | wan2-7.io minimax-h3-local-requirements (36 runs on 5090) |
