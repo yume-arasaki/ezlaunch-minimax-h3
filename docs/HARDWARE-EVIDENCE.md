@@ -41,7 +41,12 @@ Tags: **MEASURED** timed on that class · **REPORTED** community · **SPEC** doc
 
 ## Full catalog coverage (dry-run locked)
 
-66 nvidia-smi card strings, every RTX 20/30/40/50 desktop + laptop + RTX PRO workstation variant, route to the right tier. Detection is **name first, then VRAM-adjust** (demote if the card is thinner than the name suggests — 4090 Laptop 16GB → 16gb; **promote if the card is fatter than the name suggests — 3070 Ti 16GB → 16gb, 2060 12GB → 12gb**). 6GB cards reject. See `tests/test_hardware_dry_run.py`.
+66 nvidia-smi card strings, every RTX 20/30/40/50 desktop + laptop + RTX PRO workstation variant, route to the right tier. Detection is **name first, then VRAM-adjust** (demote if the card is thinner than the name suggests — 4090 Laptop 16GB → 16gb; **promote if the card is fatter than the name suggests — 3070 Ti 16GB → 16gb, 2060 12GB → 12gb**). 6GB cards reject. See `tests/test_hardware_dry_run.py`. DGX Spark (GB10) name-locks on `"GB10"` and skips the VRAM path (unified memory).
+
+## Attribution
+
+Every timing and recipe traces to a primary or to Hamster's research packs:
+**[docs/ATTRIBUTIONS.md](ATTRIBUTIONS.md)** — the canonical source ledger.
 
 ## Open questions for Hamster (Twitter / X)
 

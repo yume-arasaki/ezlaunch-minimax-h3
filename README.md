@@ -101,6 +101,35 @@ See [docs/PROFILES.md](docs/PROFILES.md). Evidence tags (MEASURED / REPORTED / S
 
 ---
 
+## Expected output by card
+
+The local **ceiling is 768p / 15s** for every card (weight limit, not hardware).
+What differs is how fast a clip finishes and how high you can push resolution
+before it gets impractical. All timings are **5s @ 480p unless noted**, with the
+Turbo 8-step recipe where supported; sources tagged M = measured, R = reported.
+
+| Card | Comfort zone | 5s @480p | What you can push | Notes |
+|---|---|---|---|---|
+| **GTX 10 (Pascal 8GB)** | 480p drafts | ~55 min (M, n=1) | 480p / 5s only | No INT8 path; ~10× slower. Dumber but works. |
+| **8GB modern** (3070 / 5060 / 4060) | 480p | ~5–15 min (R/DB) | 480p / 5s; 10s slow | 5060 8GB runs 15s@480p, 10s@960×544 (M). |
+| **10–12GB** (3060 / 3080 / 4070 / 5070) | 480–640p | ~3–15 min (M) | 10s @480p (~15 min, M); 1.0MP slow | 3060 4.5 min (M); 3080 5s@1.2MP ~15 min (M); 5070 6s@1MP ~35 min FP8 (M). 64GB RAM helps most. |
+| **16GB** (4080 / 5080 / 5070 Ti) | 480–720p | ~3–7 min (M) | 10s @480p ~3 min (M); 1MP 5s ~163s 8-step (M); avoid native 1080p | 15s @480p ~18 min (M). 5060 Ti/5070 Ti peak ~14.2–14.4 GiB — no native 1080p headroom. |
+| **24GB** (3090 / 4090) | 480p–768p | ~4–7 min (M) | Full **768p / 15s** ceiling; 15s ~30 min (M, 4090) | 3090 4m26s (M), 4090 ~7 min 5s (M). The sweet spot. |
+| **32GB** (5090) | 480p–768p | ~76s warm (M) | 768p / 15s; ~31.8GB peak VRAM | Fastest consumer. NVFP4 pack cuts 40% VRAM (later add). |
+| **48GB+** (6000 / A6000 / PRO) | 720p–768p | <72s (M) | 768p / 15s workstation-grade | 128GB host RAM comfort. |
+| **DGX Spark (GB10)** | 384×672 AV | ~15s AV in ~15 min class (R) | 384×672 / 15.08s both A+V from H3 (M, chishiki37) | Unified. Sage pinned <3.0, no `--use-sage-attention`. |
+
+**Scaling rules of thumb (M):**
+- Duration is **superlinear**: 10s ≈ 2.9× of 5s, not 2×
+- Resolution ~linear in megapixels: 5× MP ≈ 4× time
+- 720p ≈ **4×** of 480p time
+- Reference images slow **every** step — cap them
+
+**System RAM is the hidden requirement** — not VRAM alone. See
+[docs/ATTRIBUTIONS.md](docs/ATTRIBUTIONS.md) for every source.
+
+---
+
 ## Requirements checklist
 
 - [ ] NVIDIA GPU **~8GB+** (RTX 20/30/40/50 or GTX 10-series)
