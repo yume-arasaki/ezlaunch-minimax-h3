@@ -47,10 +47,12 @@ default_megapixels: 0.25
 default_steps: 20
 notes: >
   Single DGX Spark GB10 (unified 128GB). nvidia-smi cannot read VRAM —
-  use free/top/DGX Dashboard. Disk ≥200GB recommended (weights ~40GB for
-  the chishiki37 set; full luqidaxia set ~171GB). Audio+video both from H3
-  via MiniMaxH3ReferenceToVideo (NOT ImageToVideo — that latent is wrong
-  for audio → IndexError). Sage pinned <3.0, never --use-sage-attention.
-  720p well within reach: 10s @ 720p, 20-step ≈ ~20 min (MEASURED ours,
-  drowzeys Sol-Engine overlay). chishiki37 384x672/362f is the base AV path.
-  Co-tenancy: start LLM first, H3 after. License: see territory gate.
+  use free/top/DGX Dashboard. Disk ≥200GB recommended (drowzeys install
+  ~41GB weights; chishiki37 ~40GB). Audio+video both from H3 via
+  MiniMaxH3ReferenceToVideo (NOT ImageToVideo — wrong latent → IndexError).
+  PRIMARY recipe: drowzeys keys-SM121 Sol-Engine stack (install.sh +
+  RECIPE.md, Apache-2.0) — 1.54x E2E, fixes flex_attention miscompile on
+  SM121. Sage <3.0 pinned, never --use-sage-attention. 720p confirmed:
+  10s @ 720p, 20-step ≈ ~20 min (MEASURED ours). 15s (362f) ≈ ~32 min,
+  10–13GB free (MEASURED drowzeys). Co-tenancy: LLM first, H3 after.
+  License: see territory gate.

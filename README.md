@@ -118,7 +118,7 @@ another, and the table will lie. **M** = measured on that card class, **R** = re
 | **24GB** (3090 / 4090) | 480p–768p | **4090 5s @ 0.7MP 4-step → 90.6s (M, v2 stack)** · 8-step ≈ 140s (M); 15s @ 0.7MP 8-step → **~8 min (M, ours)**; 3090 5s @ 832×480 → 4m26s (M) | Full **768p / 15s** ceiling. The sweet spot. |
 | **32GB** (5090) | 480p–768p | 5s T2V warm → 76.5s (M, zenn); 8s @ 0.3MP → ~2 min (M, wan2-7) | 768p / 15s; ~31.8GB peak. NVFP4 pack later. |
 | **48GB+** (6000 / A6000 / PRO) | 720p–768p | 10s @ 480p → <72s (M) | 768p / 15s workstation-grade. 128GB host RAM comfort. |
-| **DGX Spark (GB10)** | 384×672 AV → **720p** | 15.08s AV (A+V, chishiki37 ref) → ~15 min class (M); **10s @ 720p, 20-step → ~20 min (M, ours, drowzeys Sol-Engine)** | 720p / 10s+ with the Sol-Engine overlay (drowzeys). Sage pinned <3.0. |
+| **DGX Spark (GB10)** | 384×672 AV → **720p** | 15.08s AV (A+V, chishiki37 ref) → ~15 min class (M); **10s @ 720p, 20-step → ~20 min (M, ours)**; 5s @ 864×480 full stack → 202.5s (M, drowzeys) | 720p out of one Spark easily; **drowzeys Sol-Engine = the primary recipe** (1.54×). Sage pinned <3.0. |
 
 **Like-for-like compare (5s @ 0.7MP, 8-step):** 4090 ≈ 140s (M) vs 5080 = 163s (M) →
 24GB tier wins, ordering is monotonic by construction.
