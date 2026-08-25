@@ -54,19 +54,22 @@ Compile: `workspace/drafts/ezlaunch-h3-hardware-compile-2026-08-22.md`
 | 5060 Ti 16GB | 1344×768 works; native 1080p OOM (13.5GiB allocated + 1.02GiB request) | ai-jarvis.eu truth-about-minimax-h3-home-pc |
 | 5070 Ti 16GB (desktop) | ~14.2–14.4 GiB whole-run peaks | X (Hamster compile, UdonJP) |
 
-## DGX Spark (GB10) — Hamster 2026-08-25
+## DGX Spark (GB10) — Hamster 2026-08-25 / Beaver 2026-08-25
 
-Full doc: `docs/DGX-SPARK.md`. See its Attribution section:
+Full doc: `docs/DGX-SPARK.md`. See its Attribution section.
 
-| Recipe | URL |
+| Recipe / dependency | URL |
 |---|---|
-| chishiki37 (reference AV run) | github.com/chishiki37/minimax-h3-av-comfyui-recipe |
+| **drowzeys keys-SM121 Sol-Engine (primary)** | github.com/drowzeys/keys-SM121-Optimized-MiniMax-H3-Nvidia-Sol-Engine-Kijai-SolAttn_Triton-Single-DGX-Spark — Apache-2.0, by **drkeys** (sole contributor); `install.sh` one-shot, `RECIPE.md` agent-executable. Measured idle/seed-matched: 312.7s → 202.5s (**1.54× E2E, 1.72×/step**) 5s @ 864×480 + audio; 15s/362f ≈ ~32 min, 10–13 GB free |
+| — Sol-Attn Triton + INT8/TMA | kijai/ComfyUI-SolAttn_triton (no license file → cloned, not vendored) |
+| — ComfyUI_sol-attn_Blackwell (pre-patched, Apache-2.0 + NOTICE) | KingGore/ComfyUI_sol-attn_Blackwell |
+| — derived from NVIDIA Sol-Engine (Apache-2.0) | NVlabs/Sana sol-engine · paper arXiv:2607.24027 |
+| **DGX Spark 10s @ 720p, 20-step → ~20 min** (drowzeys stack) | **field-run verified (ours)** |
+| chishiki37 (AV-correctness reference + base graph discipline) | github.com/chishiki37/minimax-h3-av-comfyui-recipe |
 | luqidaxia one-click | github.com/luqidaxia/dgxspark_comfyui_minimax_h3 |
-| drowzeys Sol-Engine 1.54x | github.com/drowzeys/keys-SM121-Optimized-MiniMax-H3-Nvidia-Sol-Engine-Kijai-SolAttn_Triton-Single-DGX-Spark |
 | riverar / hoomns vLLM-Omni | github.com/riverar/MiniMax-H3-DGX-Spark · github.com/hoomns/MiniMax-H3-DGX-Spark |
 | newjordan h3-spark | github.com/newjordan/h3-spark |
 | bjarkebolding spark-comfyui | github.com/bjarkebolding/spark-comfyui + NVIDIA forum thread |
-| **DGX Spark 10s @ 720p, 20-step → ~20 min** (drowzeys Sol-Engine overlay) | **field-run verified (ours)** |
 | TorchAO int8 weight-only +17% (no quality loss) | @amazedsaint vault src_01KZDCC7JEF8XTH778YCKCVJYK |
 | Best-models-for-Spark (single/dual/quad) | vault src_01KXGJ2A0XV9Q98Q80XSHPJPW3 |
 | Long continuous-video stitching | vault src_01KZPTQAY4CZ5ZWDV86XDZ7FBS · src_01M06WVX5RM8ZTK66BGB5BS6XV |
