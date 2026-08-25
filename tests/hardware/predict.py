@@ -131,7 +131,7 @@ def predict(name: str, vram_mib: int, profile: str | None) -> dict:
             "verdict": "ACCEPT-SPARK",
             "arch": arch,
             "bw_gb_s": bw,
-            "note": "DGX Spark GB10 unified 128GB. AV reference recipe viable (~15s @ 384x672, 20 steps). sage<3.0, no --use-sage-attention. disk ≥200GB.",
+            "note": "DGX Spark GB10 unified 128GB. AV via chishiki37 reference (15.08s @ 384x672, 20 steps); 10s @ 720p 20-step ~20 min (M, ours, drowzeys Sol-Engine overlay). sage<3.0, no --use-sage-attention. disk ≥200GB.",
         }
 
     # 10GB+ modern NVIDIA

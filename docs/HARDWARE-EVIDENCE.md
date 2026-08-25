@@ -37,7 +37,7 @@ Tags: **MEASURED** timed on that class · **REPORTED** community · **SPEC** doc
 | 4090 24GB | `rtx_4090` | MEASURED (ours): 5s @ 0.7MP 4-step → 90.6s (v2 stack); 8-step ≈ 140.3s; 15s @ 0.7MP 8-step → ~8 min. Sweet spot 0.7MP (1152×640). No 480p receipt — see gaps. | field-run verified (Aug 4, Aug 10-11) |
 | 5090 32GB | `rtx_5090` | MEASURED 76.5s T2V (zenn); ~31.8GB peak (wan2-7) | NVFP4 pack not installed yet |
 | 6000 Ada | `nvidia_48gb` | MEASURED <72s (Hamster workstation) | — |
-| DGX Spark (GB10) | `dgx_spark` | MEASURED AV run (chishiki37 recipe): 15.08s @ 384×672, 20 steps, both audio+video from H3; verified h264+aac output | SM121-specific (sage<3.0, no `--use-sage-attention`) — see `docs/DGX-SPARK.md` |
+| DGX Spark (GB10) | `dgx_spark` | MEASURED AV run (chishiki37): 15.08s @ 384×672, 20 steps, A+V both from H3 — verified h264+aac. **MEASURED (ours): 10s @ 720p, 20-step, ~20 min via drowzeys Sol-Engine overlay.** | SM121-specific (sage<3.0, no `--use-sage-attention`) — see `docs/DGX-SPARK.md` |
 
 ## Full catalog coverage (dry-run locked)
 

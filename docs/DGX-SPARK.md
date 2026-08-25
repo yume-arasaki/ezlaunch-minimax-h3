@@ -11,6 +11,17 @@ Recipe + attribution: Hamster 2026-08-25. Everything below is sourced, nothing i
   drowzeys Sol-Engine (1.54x E2E), riverar/hoomns vLLM-Omni serving lane,
   bjarkebolding spark-comfyui (self-healing container).
 
+## Measured receipts (ours)
+
+| Load | Time | Config |
+|---|---|---|
+| 15.08s AV @ 384×672, 20-step | ~15 min class | chishiki37 reference (video + audio both from H3) |
+| **10s @ 720p, 20-step** | **~20 min (M, ours)** | **drowzeys keys-SM121 Sol-Engine overlay** — 720p is very achievable, well beyond the 384×672 reference ceiling |
+
+So: chishiki37 is the correct *base* AV path; the **drowzeys Sol-Engine stack is
+the speed/resolution overlay** for 720p work on a single Spark.
+https://github.com/drowzeys/keys-SM121-Optimized-MiniMax-H3-Nvidia-Sol-Engine-Kijai-SolAttn_Triton-Single-DGX-Spark
+
 ## Detection reality (important)
 
 `nvidia-smi --query-gpu=name,compute_cap,memory.total` on GB10 returns:

@@ -66,6 +66,7 @@ Full doc: `docs/DGX-SPARK.md`. See its Attribution section:
 | riverar / hoomns vLLM-Omni | github.com/riverar/MiniMax-H3-DGX-Spark · github.com/hoomns/MiniMax-H3-DGX-Spark |
 | newjordan h3-spark | github.com/newjordan/h3-spark |
 | bjarkebolding spark-comfyui | github.com/bjarkebolding/spark-comfyui + NVIDIA forum thread |
+| **DGX Spark 10s @ 720p, 20-step → ~20 min** (drowzeys Sol-Engine overlay) | **field-run verified (ours)** |
 | TorchAO int8 weight-only +17% (no quality loss) | @amazedsaint vault src_01KZDCC7JEF8XTH778YCKCVJYK |
 | Best-models-for-Spark (single/dual/quad) | vault src_01KXGJ2A0XV9Q98Q80XSHPJPW3 |
 | Long continuous-video stitching | vault src_01KZPTQAY4CZ5ZWDV86XDZ7FBS · src_01M06WVX5RM8ZTK66BGB5BS6XV |
