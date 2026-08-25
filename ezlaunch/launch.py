@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from ezlaunch.detect import load_profile
+from ezlaunch.install.comfy import patch_minimax_memory_factor
 from ezlaunch.paths import comfy_dir, install_root, log_dir, venv_python
 from ezlaunch.state import load_state
 
@@ -78,6 +79,8 @@ def launch(
 
     cmd = build_command(profile_id, root, use_fallback_attn=use_fallback_attn)
     env = build_env(profile_id)
+    # Re-apply on every launch so older installs pick up the H3 allocator fix.
+    patch_minimax_memory_factor(comfy_dir(root))
     # Windows HF/cache safety even at runtime
     env.setdefault("HF_HUB_DISABLE_SYMLINKS", "1")
     log = log_dir(root) / "comfy.log"

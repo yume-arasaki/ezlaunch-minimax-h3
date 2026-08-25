@@ -1,14 +1,14 @@
-# Ada 24GB (RTX 4090 / sm_89)
-id: rtx_4090
-display_name: "NVIDIA GeForce RTX 4090"
-tier: "24gb"
+# Blackwell 32GB (RTX 5090)
+id: rtx_5090
+display_name: "NVIDIA GeForce RTX 5090"
+tier: "32gb"
 match_names:
-  - "RTX 4090"
-  - "GeForce RTX 4090"
-compute_capability: [8, 9]
-vram_gb_min: 20
-ram_gb_min: 32
-ram_gb_comfort: 64
+  - "RTX 5090"
+  - "GeForce RTX 5090"
+compute_capability: [10, 0]
+vram_gb_min: 28
+ram_gb_min: 64
+ram_gb_comfort: 128
 driver_min: "570.0"
 driver_recommended: "580.0"
 torch_index_url: "https://download.pytorch.org/whl/cu128"
@@ -31,11 +31,11 @@ comfy_args:
   - "--use-sage-attention"
 attention_fallback_args:
   - "--use-pytorch-cross-attention"
-sage_sm89_triton_patch: true
+sage_sm89_triton_patch: false
 clip_device: cpu
 default_megapixels: 0.7
 default_steps: 8
 notes: >
-  Kitchen CUDA + Sage v2. Ada may need the sm89→Triton patch.
-  Do not stack --lowvram with --disable-pinned-memory.
-  Laptop 4090 (16GB) is demoted to nvidia_16gb by VRAM.
+  32GB Blackwell. Same Comfy-Org pruned INT8 pack as 24GB for this branch
+  (NVFP4 pack is a later add). Peak VRAM on some 5090 suites is ~31.8GB —
+  32GB is headroom, not luxury. RAM floor 64GB, 128GB comfort.

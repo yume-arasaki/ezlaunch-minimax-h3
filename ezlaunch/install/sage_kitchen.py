@@ -35,13 +35,19 @@ def install_kitchen(python: Path) -> None:
     subprocess.check_call([str(python), "-m", "pip", "install", "--upgrade", "comfy-kitchen"])
 
 
-def install_sage(python: Path) -> str:
+def install_sage(python: Path, version_pin: Optional[str] = None) -> str:
     """Try pip wheel; return 'ok' or 'fallback'.
 
     Never hard-fail the whole installer on Windows sage build pain.
     Community (2025–2026): prebuilt wheels + triton-windows; source builds
     need VS Build Tools and often fail for dummies.
+
+    version_pin: e.g. "<3.0" — required on DGX Spark GB10 (post-3.0 =
+    mosaic artifacts on sm_121 per bjarkebolding). None = latest.
     """
+    sage_spec = "sageattention"
+    if version_pin:
+        sage_spec = f"sageattention{version_pin}"
     # Windows: triton-windows often required by community sage wheels.
     # Pin upper bound used widely with Comfy portable installs.
     if sys.platform == "win32":
@@ -59,8 +65,8 @@ def install_sage(python: Path) -> str:
                 continue  # still try sage; may use pure torch path later
 
     attempts = [
+        [sage_spec],
         ["sageattention"],
-        ["sageattention==2.2.0"],
     ]
     last_err = ""
     for pkgs in attempts:

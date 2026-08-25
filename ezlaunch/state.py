@@ -16,7 +16,8 @@ DEFAULT_STATE: Dict[str, Any] = {
     "sage_status": None,
     "last_error": None,
     "step": "welcome",
-    "te_variant": "stock",  # "stock" or "heretic"
+    "te_variant": "stock",  # effective default
+    "te_choice_made": False,  # True once the user actually chose stock/heretic
 }
 
 

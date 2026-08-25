@@ -1,0 +1,43 @@
+# 16GB NVIDIA class: 4060 Ti 16, 4080, 4070 Ti Super, 5060 Ti 16, 5070 Ti, 5080, 4090 Laptop
+id: nvidia_16gb
+display_name: "NVIDIA 16GB class"
+tier: "16gb"
+vram_gb_min: 14
+ram_gb_min: 32
+ram_gb_comfort: 48
+driver_min: "550.0"
+driver_recommended: "570.0"
+torch_index_url: "https://download.pytorch.org/whl/cu128"
+torch_packages:
+  - "torch"
+  - "torchvision"
+  - "torchaudio"
+comfy_env:
+  COMFY_KITCHEN_FORCE_CUDA: "1"
+  PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
+comfy_args:
+  - "--listen"
+  - "127.0.0.1"
+  - "--port"
+  - "8188"
+  - "--disable-pinned-memory"
+  - "--fp16-intermediates"
+  - "--disable-cuda-malloc"
+  - "--disable-smart-memory"
+  - "--use-sage-attention"
+attention_fallback_args:
+  - "--use-pytorch-cross-attention"
+sage_sm89_triton_patch: false
+clip_device: cpu
+default_megapixels: 0.5
+default_steps: 8
+notes: >
+  16GB runs pruned INT8 via offload. Stay near 480p–720p-class canvases.
+  Native 1080p has been measured to OOM on 5060 Ti 16GB. Turbo 8-step is the default.
+  --fast-disk helps only on boxes with lots of RAM + fast NVMe (not default).
+
+  Community 5080 timings (Hamster 2026-08-24, n=1):
+  - 10s @ 864x480 ~3 min (NVFP4 quant, Ref→Vid, 64GB RAM)
+  - 5.17s @ 1152x640 8-step 163s, peak 15GB (32GB RAM)
+  - 5.17s @ 1344x768 20-step 525s, our Comfy-Org INT8 pack (31.2GB RAM, --reserve-vram 0.9)
+  - 15s @ 864x480 T2V ~18 min (64GB RAM)

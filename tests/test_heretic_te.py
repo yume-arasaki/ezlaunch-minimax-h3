@@ -67,6 +67,32 @@ def test_state_missing_te_variant_defaults_to_stock(tmp_path):
     assert st["te_variant"] == "stock"
 
 
+def test_step_select_te_variant_decision_param(tmp_path):
+    """GUI path passes decision= (no input() — Windows GUI has no stdin)."""
+    from ezlaunch.paths import ensure_layout
+    from ezlaunch.state import load_state
+    from ezlaunch.wizard import step_select_te_variant
+
+    root = ensure_layout(tmp_path)
+    st = load_state(root)
+    assert st["te_variant"] == "stock"
+    # First call without decision -> should prompt via input() → make stdin EOF
+    # instead: verify the decision= param writes through cleanly both ways.
+    r = step_select_te_variant(root, decision="heretic")
+    assert r["te_variant"] == "heretic" and r["changed"] is True
+    assert load_state(root)["te_variant"] == "heretic"
+    # Re-run: already decided, no re-prompt
+    r2 = step_select_te_variant(root)
+    assert r2["te_variant"] == "heretic" and r2["changed"] is False
+    # stock path on a fresh root
+    fresh = tmp_path / "fresh-stock"
+    r3 = step_select_te_variant(fresh, decision="stock")
+    st3 = load_state(fresh)
+    assert r3["te_variant"] == "stock" and r3["changed"] is True
+    assert st3["te_variant"] == "stock"
+    assert st3["te_choice_made"] is True
+
+
 def test_download_all_skips_heretic_when_stock(tmp_path, monkeypatch):
     """download_all with te_variant='stock' skips Heretic TE entry."""
     from ezlaunch.models.download import download_all, load_manifest

@@ -1,10 +1,101 @@
-# Name substrings → profile id (first match wins, case-insensitive)
+# Name substrings → profile id (first match wins, case-insensitive).
+# More specific names must come first (5070 Ti before 5070, 4060 Ti before 4060).
+# select_profile() then demotes DOWN or promotes UP by measured VRAM
+# (4090 Laptop 16GB → 16gb; 3070 Ti 16GB → 16gb; 2060 12GB → 12gb).
 mappings:
+  - contains: "GB10"
+    profile: dgx_spark
+  - contains: "DGX Spark"
+    profile: dgx_spark
+  - contains: "5090"
+    profile: rtx_5090
   - contains: "4090"
     profile: rtx_4090
   - contains: "3090"
     profile: rtx_3090
+  - contains: "3080"
+    profile: nvidia_12gb
+  - contains: "3070"
+    profile: nvidia_8gb
+  - contains: "3060"
+    profile: nvidia_12gb
+  - contains: "5080"
+    profile: nvidia_16gb
+  - contains: "5070 Ti"
+    profile: nvidia_16gb
+  - contains: "5070"
+    profile: nvidia_12gb
+  - contains: "5060 Ti"
+    profile: nvidia_16gb
+  - contains: "5060"
+    profile: nvidia_8gb
+  - contains: "5050"
+    profile: nvidia_8gb
+  - contains: "4080"
+    profile: nvidia_16gb
+  - contains: "4070 Ti Super"
+    profile: nvidia_16gb
+  - contains: "4070 Ti"
+    profile: nvidia_12gb
+  - contains: "4070 Super"
+    profile: nvidia_12gb
+  - contains: "4070"
+    profile: nvidia_12gb
+  - contains: "4060 Ti"
+    profile: nvidia_16gb
+  - contains: "4060"
+    profile: nvidia_8gb
+  - contains: "4050"
+    profile: nvidia_8gb
+  - contains: "3050"
+    profile: nvidia_8gb
+  - contains: "2080 Ti"
+    profile: nvidia_12gb
+  - contains: "2080"
+    profile: nvidia_8gb
+  - contains: "2070 Super"
+    profile: nvidia_8gb
+  - contains: "2070"
+    profile: nvidia_8gb
+  - contains: "2060 Super"
+    profile: nvidia_8gb
+  - contains: "2060"
+    profile: nvidia_8gb
+  - contains: "TITAN RTX"
+    profile: rtx_3090
+  - contains: "A6000"
+    profile: nvidia_48gb
+  - contains: "RTX PRO 4500"
+    profile: rtx_5090
+  - contains: "RTX PRO 6000"
+    profile: nvidia_48gb
+  - contains: "RTX PRO 5000"
+    profile: nvidia_48gb
+  - contains: "RTX 6000"
+    profile: nvidia_48gb
+  - contains: "RTX 5000"
+    profile: nvidia_48gb
+  - contains: "A5000"
+    profile: rtx_3090
+
+# Measured VRAM → profile when the name is unknown or the name-hit is too fat.
+# First row whose min_mib <= vram_mib wins (keep descending).
+vram_fallback:
+  - min_mib: 40000
+    profile: nvidia_48gb
+  - min_mib: 28000
+    profile: rtx_5090
+  - min_mib: 20000
+    profile: rtx_3090
+  - min_mib: 14000
+    profile: nvidia_16gb
+  - min_mib: 9500
+    profile: nvidia_12gb
+  - min_mib: 7000
+    profile: nvidia_8gb
+
 fallback_unknown_24gb: rtx_3090
 unsupported_message: >
-  This MVP supports NVIDIA GeForce RTX 4090 and RTX 3090.
-  Other cards may work later — pick the closest profile only if you know what you're doing.
+  This build supports NVIDIA GeForce / RTX cards from ~8GB up.
+  AMD, Intel, and Apple Silicon are not in this branch yet.
+  Pascal GTX 10-series is accepted but expected to be ~10x slower (no INT8 path).

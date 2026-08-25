@@ -1,0 +1,54 @@
+# DGX Spark (NVIDIA GB10, Grace Blackwell) — unified 128GB
+# Reference: chishiki37/minimax-h3-av-comfyui-recipe (Hamster attribution 2026-08-25)
+id: dgx_spark
+display_name: "NVIDIA DGX Spark (GB10, 128GB unified)"
+tier: "spark"
+match_names:
+  - "GB10"
+  - "DGX Spark"
+compute_capability: [12, 1]
+# Unified memory: nvidia-smi reports "Not Supported" for VRAM. Detection name-locks on GB10.
+vram_gb_min: 0
+ram_gb_min: 96       # free RAM before launch recommended (110 ideal); 128GB physical
+ram_gb_comfort: 128
+driver_min: "580.0"
+driver_recommended: "580.0"
+# SM121 (GB10) needs CUDA-13 builds of torch. ARM64 (Grace Blackwell).
+# vLLM lane uses cu130-nightly; ComfyUI piggybacks on a vLLM-era venv (chishiki37).
+torch_index_url: "https://download.pytorch.org/whl/cu130"
+torch_packages:
+  - "torch"
+  - "torchvision"
+  - "torchaudio"
+comfy_env:
+  COMFY_KITCHEN_FORCE_CUDA: "1"
+  PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
+# From bjarkebolding + drowzeys (Spark non-negotiables):
+#   - NEVER --use-sage-attention with H3 (mosaic artifacts / wrong path).
+#   - SageAttention version must be pinned PRE-3.0 on GB10.
+#   - res_multistep + BasicGuider; KSamplerSelect alone = IndexError.
+comfy_args:
+  - "--listen"
+  - "0.0.0.0"
+  - "--port"
+  - "8188"
+  - "--lowvram"
+  - "--disable-pinned-memory"
+  - "--fp16-intermediates"
+  - "--disable-cuda-malloc"
+attention_fallback_args:
+  - "--use-pytorch-cross-attention"
+sage_sm89_triton_patch: false
+sage_version_pin: "<3.0"
+clip_device: cpu
+# chishiki37: 384x672 / 362f (~15.08s @24fps) is the single-Spark AV ceiling.
+# cfg 1.0, res_multistep, simple, 20 steps (10 was patchier).
+default_megapixels: 0.25
+default_steps: 20
+notes: >
+  Single DGX Spark GB10 (unified 128GB). nvidia-smi cannot read VRAM —
+  use free/top/DGX Dashboard. Disk ≥200GB recommended (weights ~40GB for
+  the chishiki37 set; full luqidaxia set ~171GB). Audio+video both from H3
+  via MiniMaxH3ReferenceToVideo (NOT ImageToVideo — that latent is wrong
+  for audio → IndexError). Sage pinned <3.0, never --use-sage-attention.
+  Co-tenancy: start LLM first, H3 after. License: see territory gate.

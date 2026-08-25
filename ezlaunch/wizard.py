@@ -4,7 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Callable, Optional
 
-from ezlaunch.detect import run_detect
+from ezlaunch.detect import load_profile, run_detect
 from ezlaunch.install.comfy import ensure_comfy, ensure_custom_nodes, install_comfy_requirements
 from ezlaunch.install.pytorch import ensure_venv, install_torch, verify_cuda
 from ezlaunch.install.sage_kitchen import install_kitchen, install_sage, patch_sm89_triton
@@ -54,12 +54,10 @@ def step_install_engine(root: Path | None = None, progress: Optional[ProgressCb]
     install_torch(profile_id, py, progress)
     p("install", 0.25, "Installing acceleration libraries…")
     install_kitchen(py)
-    sage = install_sage(py)
+    prof = load_profile(profile_id)
+    sage = install_sage(py, version_pin=prof.get("sage_version_pin"))
     st["sage_status"] = sage
     if sage == "ok":
-        from ezlaunch.detect import load_profile
-
-        prof = load_profile(profile_id)
         if prof.get("sage_sm89_triton_patch"):
             st["sage_patch"] = patch_sm89_triton(py)
     comfy = ensure_comfy(root, progress)
@@ -82,34 +80,38 @@ def step_install_engine(root: Path | None = None, progress: Optional[ProgressCb]
     return {"ok": True, "profile_id": profile_id, "sage_status": st.get("sage_status")}
 
 
-def step_select_te_variant(root: Path | None = None) -> dict:
-    """Choose text encoder variant: stock (default) or Heretic (optional)."""
+def step_select_te_variant(root: Path | None = None, decision: str | None = None) -> dict:
+    """Choose text encoder variant: stock (default) or Heretic (optional).
+
+    decision: "stock" | "heretic" — used by the GUI wizard, which has no
+    console/stdin and must not call input(). CLI leaves it None → prompts.
+    """
     root = ensure_layout(root)
     st = load_state(root)
-    # Already decided? Return current choice.
-    current = st.get("te_variant", "stock")
-    if current in ("stock", "heretic"):
-        return {"te_variant": current, "changed": False}
+    # Already decided (explicit user choice)? Return current.
+    if st.get("te_choice_made") and st.get("te_variant") in ("stock", "heretic"):
+        return {"te_variant": st["te_variant"], "changed": False}
 
-    # First time: present choice
-    print()
-    print("--- Text encoder choice ---")
-    print()
-    print("  1) Stock TE (recommended)")
-    print("     Comfy-Org's official text encoder")
-    print()
-    print("  2) Heretic TE (advanced)")
-    print("     Community abliterated/uncensored variant")
-    print("     ~15 GB extra · not guaranteed to bypass all safety")
-    print("     · user responsibility · filename matches stock")
-    print()
-    ans = input("Choose [1/2] (default 1): ").strip()
-    if ans in ("2",):
-        st["te_variant"] = "heretic"
-    else:
-        st["te_variant"] = "stock"
+    if decision not in ("stock", "heretic"):
+        # First time: present choice (CLI path only)
+        print()
+        print("--- Text encoder choice ---")
+        print()
+        print("  1) Stock TE (recommended)")
+        print("     Comfy-Org's official text encoder")
+        print()
+        print("  2) Heretic TE (advanced)")
+        print("     Community abliterated/uncensored variant")
+        print("     ~15 GB extra · may not uncensor much")
+        print("     · user responsibility · filename matches stock")
+        print()
+        ans = input("Choose [1/2] (default 1): ").strip()
+        decision = "heretic" if ans in ("2",) else "stock"
+
+    st["te_variant"] = decision
+    st["te_choice_made"] = True
     save_state(st, root)
-    return {"te_variant": st["te_variant"], "changed": True}
+    return {"te_variant": decision, "changed": True}
 
 
 def step_download_models(root: Path | None = None, progress: Optional[ProgressCb] = None) -> dict:

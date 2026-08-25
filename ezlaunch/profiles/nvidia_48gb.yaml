@@ -1,17 +1,12 @@
-# Ampere 24GB (RTX 3090 / sm_86)
-id: rtx_3090
-display_name: "NVIDIA GeForce RTX 3090"
-tier: "24gb"
-match_names:
-  - "RTX 3090"
-  - "GeForce RTX 3090"
-  - "RTX 3090 Ti"
-compute_capability: [8, 6]
-vram_gb_min: 20
-ram_gb_min: 32
-ram_gb_comfort: 64
-driver_min: "535.0"
-driver_recommended: "550.0"
+# Workstation 48GB+ NVIDIA: RTX 6000 Ada, PRO 5000 48GB, A6000
+id: nvidia_48gb
+display_name: "NVIDIA 48GB+ workstation"
+tier: "48gb"
+vram_gb_min: 40
+ram_gb_min: 64
+ram_gb_comfort: 128
+driver_min: "550.0"
+driver_recommended: "570.0"
 torch_index_url: "https://download.pytorch.org/whl/cu128"
 torch_packages:
   - "torch"
@@ -28,14 +23,13 @@ comfy_args:
   - "--disable-pinned-memory"
   - "--fp16-intermediates"
   - "--disable-cuda-malloc"
-  - "--disable-smart-memory"
   - "--use-sage-attention"
 attention_fallback_args:
   - "--use-pytorch-cross-attention"
 sage_sm89_triton_patch: false
 clip_device: cpu
-default_megapixels: 0.6
+default_megapixels: 1.0
 default_steps: 8
 notes: >
-  24GB Ampere. Do not stack --lowvram with --disable-pinned-memory.
-  Turbo LoRA default is 8 steps (v4-600). 4-step is a quality trade, not the default.
+  Workstation NVIDIA. Same pruned INT8 pack. More VRAM = less offload, not a
+  different model. 128GB host RAM is comfort, not a hard requirement.

@@ -123,8 +123,31 @@ class WizardApp(tk.Tk):
         )
 
     def on_models(self):
+        # Ask text-encoder choice on the main thread BEFORE spawning the
+        # worker — tkinter dialogs must not run inside a background thread,
+        # and Windows GUI has no stdin for input().
+        from ezlaunch.paths import ensure_layout
+        from ezlaunch.state import load_state
+        from ezlaunch.wizard import step_select_te_variant
+
+        root = ensure_layout()
+        st = load_state(root)
+        already_made = st.get("te_choice_made") and st.get("te_variant") in ("stock", "heretic")
+        if not already_made:
+            choice = messagebox.askyesno(
+                "Text encoder",
+                "Download options:\n\n"
+                "Yes  = Heretic TE (advanced)\n"
+                "       community abliterated variant, ~15 GB extra,\n"
+                "       may not uncensor much — your call\n\n"
+                "No   = Stock TE (recommended, official Comfy-Org)\n\n"
+                "Choose Heretic?",
+            )
+            step_select_te_variant(root, decision="heretic" if choice else "stock")
+        else:
+            step_select_te_variant(root, decision=st.get("te_variant", "stock"))
+
         def fn():
-            step_select_te_variant()
             step_download_models(progress=self._progress)
 
         self._run_bg(

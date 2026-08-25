@@ -1,17 +1,12 @@
-# Ampere 24GB (RTX 3090 / sm_86)
-id: rtx_3090
-display_name: "NVIDIA GeForce RTX 3090"
-tier: "24gb"
-match_names:
-  - "RTX 3090"
-  - "GeForce RTX 3090"
-  - "RTX 3090 Ti"
-compute_capability: [8, 6]
-vram_gb_min: 20
+# 8GB modern NVIDIA (Ampere/Ada/Blackwell): 3070, 4060 8GB, 5060 8GB
+id: nvidia_8gb
+display_name: "NVIDIA 8GB class (modern)"
+tier: "8gb"
+vram_gb_min: 7
 ram_gb_min: 32
 ram_gb_comfort: 64
 driver_min: "535.0"
-driver_recommended: "550.0"
+driver_recommended: "570.0"
 torch_index_url: "https://download.pytorch.org/whl/cu128"
 torch_packages:
   - "torch"
@@ -34,8 +29,11 @@ attention_fallback_args:
   - "--use-pytorch-cross-attention"
 sage_sm89_triton_patch: false
 clip_device: cpu
-default_megapixels: 0.6
+default_megapixels: 0.3
 default_steps: 8
 notes: >
-  24GB Ampere. Do not stack --lowvram with --disable-pinned-memory.
-  Turbo LoRA default is 8 steps (v4-600). 4-step is a quality trade, not the default.
+  8GB modern (not Pascal). 480p preferred. 32GB system RAM required.
+  Uses --disable-pinned-memory, not --lowvram.
+  Runs confirmed (5060 Laptop 8GB + 32GB, CUDA 13.2: 15s @ 864x480, 10s @ ~960x544,
+  5s ~720p; FP8 and INT8 both shown). No verified wall-clock on our Comfy-Org INT8
+  pack — treat 5-15 min/5s as direction, not a certified number.
