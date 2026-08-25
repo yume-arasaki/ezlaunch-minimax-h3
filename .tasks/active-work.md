@@ -23,8 +23,4 @@
 - Global `--use-sage-attention` still used on non-Spark NVIDIA (KJ-scoped rewrite later)
 - Native 1080p OOM on 16GB cards (measured — 5060 Ti / 5070 Ti)
 
-## Next Steps
-- [ ] Real-hardware 4090 smoke (needs SSH creds for Joey's box)
-- [ ] Real-hardware Spark smoke if a GB10 is reachable
-- [ ] Joey: license acknowledgement yes/no
 - [ ] AMD / Apple later
