@@ -37,6 +37,7 @@ Tags: **MEASURED** timed on that class · **REPORTED** community · **SPEC** doc
 | 4090 24GB | `rtx_4090` | MEASURED Joey field run | — |
 | 5090 32GB | `rtx_5090` | MEASURED 76.5s T2V (zenn); ~31.8GB peak (wan2-7) | NVFP4 pack not installed yet |
 | 6000 Ada | `nvidia_48gb` | MEASURED <72s (Hamster workstation) | — |
+| DGX Spark (GB10) | `dgx_spark` | MEASURED AV run (chishiki37 recipe): 15.08s @ 384×672, 20 steps, both audio+video from H3; verified h264+aac output | SM121-specific (sage<3.0, no `--use-sage-attention`) — see `docs/DGX-SPARK.md` |
 
 ## Full catalog coverage (dry-run locked)
 

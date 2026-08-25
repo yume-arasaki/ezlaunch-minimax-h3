@@ -86,17 +86,18 @@ Need **~100 GB free disk** and a solid internet connection the first time.
 
 | Card class | What EZlaunch does |
 |------|---------------------|
-| **8GB Pascal (GTX 10)** | `--lowvram` stack, no Sage, ~55 min for 5s @ 480p. Honest warning. |
+| **8GB Pascal (GTX 10)** | `--lowvram` stack, no Sage, cu126 torch. ~55 min for 5s @ 480p. |
 | **8GB modern (3070 / 5060)** | `--disable-pinned-memory` + Sage. 480p. ~5–15 min. |
 | **10–12GB (3060 / 4070 / 5070)** | Same flags. RAM + PCIe offload is the limiter. Turbo 8-step. |
 | **16GB (4080 / 5080 / 5070 Ti)** | Same flags. Stay off native 1080p. |
 | **24GB (3090 / 4090)** | Kitchen CUDA · Sage · CLIP on CPU. **No** `--lowvram` (fights pinned-memory). |
 | **32GB (5090)** | Same pack. 64GB host RAM recommended. |
 | **48GB+ workstation** | Same pack, higher default megapixels. |
+| **DGX Spark (GB10)** | Unified 128GB. `--lowvram`, **never** `--use-sage-attention`, sage pinned <3.0, cu130 torch. AV reference recipe = default. |
 
 Auto-detect reads `nvidia-smi` then demotes by measured VRAM (4090 Laptop → 16GB). System RAM under 32GB is a warning; under 24GB blocks install.
 
-See [docs/PROFILES.md](docs/PROFILES.md). Evidence tags (MEASURED / REPORTED / SPEC): [docs/HARDWARE-EVIDENCE.md](docs/HARDWARE-EVIDENCE.md).
+See [docs/PROFILES.md](docs/PROFILES.md). Evidence tags (MEASURED / REPORTED / SPEC): [docs/HARDWARE-EVIDENCE.md](docs/HARDWARE-EVIDENCE.md). DGX Spark (GB10): [docs/DGX-SPARK.md](docs/DGX-SPARK.md).
 
 ---
 

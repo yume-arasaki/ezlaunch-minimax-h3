@@ -13,8 +13,9 @@ if the card is thinner than the profile floor (4090 Laptop → 16GB, 4060 Ti 8GB
 | `rtx_4090` | 4090 desktop | 20GB | same + sm89 Triton patch. |
 | `rtx_5090` | 5090 | 28GB | same pack. 64GB host RAM recommended. |
 | `nvidia_48gb` | RTX 6000 / A6000 / PRO 5000 | 40GB | workstation. |
+| `dgx_spark` | DGX Spark (GB10) · Grace Blackwell | unified 128GB | `--lowvram`, sage pinned `<3.0`, never `--use-sage-attention` |
 
-AMD, Intel, and Apple Silicon are **not** in this branch.
+AMD, Intel (except GB10), and Apple Silicon are **not** in this branch.
 
 ## Shared rules (modern NVIDIA)
 

@@ -4,7 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Callable, Optional
 
-from ezlaunch.detect import run_detect
+from ezlaunch.detect import load_profile, run_detect
 from ezlaunch.install.comfy import ensure_comfy, ensure_custom_nodes, install_comfy_requirements
 from ezlaunch.install.pytorch import ensure_venv, install_torch, verify_cuda
 from ezlaunch.install.sage_kitchen import install_kitchen, install_sage, patch_sm89_triton
@@ -54,12 +54,10 @@ def step_install_engine(root: Path | None = None, progress: Optional[ProgressCb]
     install_torch(profile_id, py, progress)
     p("install", 0.25, "Installing acceleration libraries…")
     install_kitchen(py)
-    sage = install_sage(py)
+    prof = load_profile(profile_id)
+    sage = install_sage(py, version_pin=prof.get("sage_version_pin"))
     st["sage_status"] = sage
     if sage == "ok":
-        from ezlaunch.detect import load_profile
-
-        prof = load_profile(profile_id)
         if prof.get("sage_sm89_triton_patch"):
             st["sage_patch"] = patch_sm89_triton(py)
     comfy = ensure_comfy(root, progress)

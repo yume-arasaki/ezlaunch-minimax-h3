@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 import pytest
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -105,6 +106,10 @@ CARDS = [
     ("NVIDIA RTX A5000", 24576, "550.54", "rtx_3090", "SPEC A5000 24GB"),
     ("NVIDIA RTX A6000", 49140, "550.54", "nvidia_48gb", "SPEC A6000 48GB"),
 
+    # --- DGX Spark (GB10 unified 128GB) ---
+    ("NVIDIA GB10", 0, "580.95", "dgx_spark", "MEASURED nvidia-smi: GB10 compute_cap 12.1, VRAM 'Not Supported' (unified) / ai-muninn + NVIDIA FAQ"),
+    ("NVIDIA GB10", 32768, "580.95", "dgx_spark", "SPEC nvidia-smi may marshal 0 or a number; name-lock must win"),
+
     # --- Unknown name fallbacks ---
     ("NVIDIA GeForce RTX Mystery 24GB", 24576, "550.54", "rtx_3090", "SPEC unknown 24GB fallback"),
     ("NVIDIA GeForce GTX 1080 Ti", 11264, "535.98", "nvidia_8gb_legacy", "MEASURED Pascal ~55min / Hamster 8GB legacy"),
@@ -181,6 +186,12 @@ def test_launch_argv_matches_research_rules(tmp_path, monkeypatch):
             assert PINNED not in args
             assert SAGE not in args
             assert "COMFY_KITCHEN_FORCE_CUDA" not in (prof.get("comfy_env") or {})
+        elif expect == "dgx_spark":
+            # Spark is the exception by design: lowvram ON (unified, chishiki37
+            # recipe), and NEVER --use-sage-attention with H3 on GB10.
+            assert LOWVRAM in args
+            assert SAGE not in args
+            assert PINNED in args
         else:
             assert PINNED in args, expect
             assert LOWVRAM not in args, expect
@@ -189,7 +200,7 @@ def test_launch_argv_matches_research_rules(tmp_path, monkeypatch):
             assert "expandable_segments:True" in env.get("PYTORCH_CUDA_ALLOC_CONF", "")
 
         assert "--fp16-intermediates" in args
-        assert prof["default_steps"] == 8
+        assert prof["default_steps"] == (20 if expect == "dgx_spark" else 8)
         assert prof.get("clip_device") == "cpu"
 
     # Every shipped NVIDIA profile must have been exercised.
@@ -273,3 +284,40 @@ def test_comfy_up_bat_launches_venv_python():
     with mock.patch("ezlaunch.paths.sys.platform", "win32"):
         assert venv_python().name == "python.exe"
         assert "Scripts" in str(venv_python())
+
+
+def test_dgx_spark_profile_non_negotiables():
+    """Spark must NOT pass --use-sage-attention; sage pinned <3.0; lowvram on."""
+    prof = load_profile("dgx_spark")
+    args = prof["comfy_args"]
+    assert "--use-sage-attention" not in args
+    assert "--lowvram" in args
+    assert prof.get("sage_version_pin") == "<3.0"
+    assert prof.get("compute_capability") == [12, 1]
+
+
+def test_dgx_spark_select_ignores_vram():
+    """GB10 name-lock must win even though nvidia-smi reports VRAM as 0/unsupported."""
+    assert select_profile("NVIDIA GB10", 0) == "dgx_spark"
+    assert select_profile("NVIDIA GB10", 32768) == "dgx_spark"
+
+
+def test_sage_spec_pin():
+    """install_sage with a version_pin must target sageattention<pin> first."""
+    from ezlaunch.install.sage_kitchen import install_sage
+    import subprocess
+
+    calls = []
+
+    def fake_check_call(cmd, **kw):
+        calls.append(cmd)
+        if "import sageattention" in " ".join(cmd) if isinstance(cmd, list) else "import sageattention" in cmd:
+            return 0
+        raise FileNotFoundError  # force pip loop to try fallback
+
+    with mock.patch.object(subprocess, "check_call", side_effect=fake_check_call):
+        try:
+            install_sage(Path("/definitely/not/real"), version_pin="<3.0")
+        except FileNotFoundError:
+            pass  # mocked env final fallback raises
+    assert any("sageattention<3.0" in " ".join(c) for c in calls)

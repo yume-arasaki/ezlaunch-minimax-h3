@@ -3,6 +3,10 @@
 # select_profile() then demotes DOWN or promotes UP by measured VRAM
 # (4090 Laptop 16GB → 16gb; 3070 Ti 16GB → 16gb; 2060 12GB → 12gb).
 mappings:
+  - contains: "GB10"
+    profile: dgx_spark
+  - contains: "DGX Spark"
+    profile: dgx_spark
   - contains: "5090"
     profile: rtx_5090
   - contains: "4090"

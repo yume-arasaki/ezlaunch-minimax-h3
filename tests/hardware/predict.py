@@ -42,6 +42,8 @@ def arch_of(name: str) -> str:
     n = name.lower()
     if "gtx 10" in n or "gtx 1080" in n:
         return "pascal"
+    if "gb10" in n or "dgx spark" in n:
+        return "blackwell-s121"
     if "rtx 20" in n or n.startswith("nvidia titan"):
         return "turing"
     if "rtx 30" in n or "a4000" in n or "a4500" in n or "a5000" in n or "a6000" in n:
@@ -122,6 +124,14 @@ def predict(name: str, vram_mib: int, profile: str | None) -> dict:
             "arch": arch,
             "bw_gb_s": bw,
             "note": f"8GB modern + 32GB RAM. 480p preferred. bandwidth {bw_class(bw)}. Runs, minutes per 5s clip.",
+        }
+
+    if profile == "dgx_spark":
+        return {
+            "verdict": "ACCEPT-SPARK",
+            "arch": arch,
+            "bw_gb_s": bw,
+            "note": "DGX Spark GB10 unified 128GB. AV reference recipe viable (~15s @ 384x672, 20 steps). sage<3.0, no --use-sage-attention. disk ≥200GB.",
         }
 
     # 10GB+ modern NVIDIA

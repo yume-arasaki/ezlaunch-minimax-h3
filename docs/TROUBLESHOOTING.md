@@ -216,6 +216,33 @@ Override: `EZLAUNCH_HOME` (use a **permanent** path, not temp folders).
 
 ---
 
+## DGX Spark (GB10) issues
+
+**Symptom:** `nvidia-smi` shows "Not Supported" for memory.
+Expected. Unified memory — use `free` / `top` / DGX Dashboard (https://localhost:11000).
+
+**Symptom:** Initialisation dump / `IndexError: list index out of range`.
+You're using a **video-only latent** with the AV diffusion model. Use
+`MiniMaxH3ReferenceToVideo`, **not** `MiniMaxH3ImageToVideo` (the wrong latent
+for H3 audio). See `docs/DGX-SPARK.md` node graph.
+
+**Symptom:** Mosaic / checkerboard artifacts on GB10.
+SageAttention version too new — must be pinned **pre-3.0** on SM121. And never
+pass `--use-sage-attention` (EZlaunch's Spark profile omits it by design).
+
+**Symptom:** Patchy spots / bubbles on long clips.
+20 steps is the floor for 15s AV on GB10. 10 steps = patchier.
+
+**Symptom:** `SaveAudioAdvanced` opus error.
+`format=opus` needs a `quality` input (`128k`).
+
+**Symptom:** Wrong-looking attention results (cos-sim drift).
+`flex_attention` is silently wrong on SM121. Use SDPA. Never benchmark a busy GB10.
+
+More: `docs/DGX-SPARK.md`.
+
+---
+
 ## Safe non-AI self-test (no big downloads)
 
 ```bash

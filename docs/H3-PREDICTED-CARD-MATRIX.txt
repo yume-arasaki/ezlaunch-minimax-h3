@@ -61,6 +61,8 @@ RTX A4000                                    ampere     16384   448 nvidia_16gb 
 RTX A4500                                    ampere     20480   640 rtx_3090          ACCEPT-24GB    SPEC A4500 20GB
 RTX A5000                                    ampere     24576   768 rtx_3090          ACCEPT-24GB    SPEC A5000 24GB
 RTX A6000                                    ampere     49140   768 nvidia_48gb       ACCEPT-32GB+   SPEC A6000 48GB
+GB10                                         blackwell-s121      0     ? dgx_spark         ACCEPT-SPARK   MEASURED nvidia-smi: GB10 compute_cap 12.1, VRAM 'Not Suppor
+GB10                                         blackwell-s121  32768     ? dgx_spark         ACCEPT-SPARK   SPEC nvidia-smi may marshal 0 or a number; name-lock must wi
 RTX Mystery 24GB                             unknown    24576     ? rtx_3090          ACCEPT-24GB    SPEC unknown 24GB fallback
 GTX 1080 Ti                                  pascal     11264   484 nvidia_8gb_legacy ACCEPT-SLOW    MEASURED Pascal ~55min / Hamster 8GB legacy
 GTX 1060 6GB                                 pascal      6144   192 nvidia_8gb_legacy ACCEPT-SLOW    SPEC Pascal name-lock even at 6GB

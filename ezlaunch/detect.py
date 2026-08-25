@@ -165,6 +165,11 @@ def select_profile(gpu_name: str, vram_mib: int = 0) -> Optional[str]:
             break
 
     out = named
+    # DGX Spark (GB10): unified memory — nvidia-smi VRAM is "Not Supported",
+    # so VRAM-based promote/demote is meaningless. Name-lock wins outright.
+    if out == "dgx_spark":
+        return out
+
     if named:
         floor_gb = _profile_floor_gb(named)
         # Demote DOWN when the name profile is fatter than measured VRAM.
@@ -291,16 +296,31 @@ def run_detect(min_disk_gb: float | None = None) -> DetectReport:
         ready = os_ok and all(c.ok for c in checks if c.title != "Python")
         return DetectReport(os_name, os_ok, None, None, checks, False)
 
+    profile_id = select_profile(gpu.name, gpu.vram_mib)
+    is_spark = profile_id == "dgx_spark"
     checks.append(
         CheckResult(
-            ok=gpu.vram_mib >= 7000,
+            ok=is_spark or gpu.vram_mib >= 7000,
             title="Graphics card",
-            detail=f"{gpu.name} · {gpu.vram_mib} MiB VRAM · driver {gpu.driver}",
-            fix="Need about 8 GB VRAM or more. AMD / Apple Silicon are not in this branch yet.",
+            detail=f"{gpu.name} · {('unified ' + str(int(round((system_ram_gb() or 0)))) + ' GB RAM') if is_spark else str(gpu.vram_mib) + ' MiB VRAM'} · driver {gpu.driver}",
+            fix=(
+                "DGX Spark is a unified-memory machine — nvidia-smi can't read VRAM; "
+                "ensure you have ≥96 GB free RAM. Other cards need ~8 GB VRAM+."
+                if is_spark
+                else "Need about 8 GB VRAM or more. AMD / Apple Silicon are not in this branch yet."
+            ),
         )
     )
+    if is_spark:
+        # Spark: nvidia-smi reports memory "Not Supported"; use host RAM as the resource.
+        checks.append(
+            CheckResult(
+                ok=True,
+                title="DGX Spark unified memory",
+                detail="GB10 unified 128 GB — nvidia-smi VRAM not supported. Use DGX Dashboard / free / top.",
+            )
+        )
 
-    profile_id = select_profile(gpu.name, gpu.vram_mib)
     if not profile_id:
         checks.append(
             CheckResult(
