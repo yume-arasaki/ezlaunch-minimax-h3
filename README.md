@@ -105,19 +105,28 @@ See [docs/PROFILES.md](docs/PROFILES.md). Evidence tags (MEASURED / REPORTED / S
 
 The local **ceiling is 768p / 15s** for every card (weight limit, not hardware).
 What differs is how fast a clip finishes and how high you can push resolution
-before it gets impractical. All timings are **5s @ 480p unless noted**, with the
-Turbo 8-step recipe where supported; sources tagged M = measured, R = reported.
+before it gets impractical. Every row states **its exact load** (canvas · steps ·
+duration) — otherwise "3 min" on one card can be a lighter job than "8 min" on
+another, and the table will lie. **M** = measured on that card class, **R** = reported.
 
-| Card | Comfort zone | 5s @480p | What you can push | Notes |
-|---|---|---|---|---|
-| **GTX 10 (Pascal 8GB)** | 480p drafts | ~55 min (M, n=1) | 480p / 5s only | No INT8 path; ~10× slower. Dumber but works. |
-| **8GB modern** (3070 / 5060 / 4060) | 480p | ~5–15 min (R/DB) | 480p / 5s; 10s slow | 5060 8GB runs 15s@480p, 10s@960×544 (M). |
-| **10–12GB** (3060 / 3080 / 4070 / 5070) | 480–640p | ~3–15 min (M) | 10s @480p (~15 min, M); 1.0MP slow | 3060 4.5 min (M); 3080 5s@1.2MP ~15 min (M); 5070 6s@1MP ~35 min FP8 (M). 64GB RAM helps most. |
-| **16GB** (4080 / 5080 / 5070 Ti) | 480–720p | ~3–7 min (M) | 10s @480p ~3 min (M); 1MP 5s ~163s 8-step (M); avoid native 1080p | 15s @480p ~18 min (M). 5060 Ti/5070 Ti peak ~14.2–14.4 GiB — no native 1080p headroom. |
-| **24GB** (3090 / 4090) | 480p–768p | ~4–7 min (M) | Full **768p / 15s** ceiling; 15s ~30 min (M, 4090) | 3090 4m26s (M), 4090 ~7 min 5s (M). The sweet spot. |
-| **32GB** (5090) | 480p–768p | ~76s warm (M) | 768p / 15s; ~31.8GB peak VRAM | Fastest consumer. NVFP4 pack cuts 40% VRAM (later add). |
-| **48GB+** (6000 / A6000 / PRO) | 720p–768p | <72s (M) | 768p / 15s workstation-grade | 128GB host RAM comfort. |
-| **DGX Spark (GB10)** | 384×672 AV | ~15s AV in ~15 min class (R) | 384×672 / 15.08s both A+V from H3 (M, chishiki37) | Unified. Sage pinned <3.0, no `--use-sage-attention`. |
+| Card class | Comfort zone | Verified receipt (load → time) | What you can push |
+|---|---|---|---|
+| **GTX 10 Pascal 8GB** | 480p drafts | 5s @ 832×480 → ~55 min (M, n=1) | 480p / 5s only. No INT8 path. |
+| **8GB modern** (3070 / 5060 / 4060) | 480p | no certified 5s wall on our pack — runs confirmed: 5060 Laptop 15s@480p, 10s@~960×544 (M) | 480p / 5s; 10s slow. 32GB RAM required. |
+| **10–12GB** (3060 / 3080 / 4070 / 5070) | 480–640p | 3060 5s @ 864×480 Turbo8 → 4.5 min (M); 3080 5s @ 1216×672 → ~15 min (M); 5070 10s @ 864×480 → ~15 min (M) | 10s @480p ~15 min; 1.0MP slow. 64GB RAM helps most. |
+| **16GB** (4080 / 5080 / 5070 Ti) | 480–720p | 5080 5.17s @ 1152×640 8-step → **163s** (M); 5080 10s @ 864×480 → ~3 min (M, Ref→Vid); 5080 15s @ 864×480 → ~18 min (M) | 5s @ 0.7MP ≈ 2.7 min. Avoid native 1080p (peak ~14.2–14.4 GiB). |
+| **24GB** (3090 / 4090) | 480p–768p | **4090 5s @ 0.7MP 4-step → 90.6s (M, v2 stack)** · 8-step ≈ 140s (M); 15s @ 0.7MP 8-step → **~8 min (M, ours)**; 3090 5s @ 832×480 → 4m26s (M) | Full **768p / 15s** ceiling. The sweet spot. |
+| **32GB** (5090) | 480p–768p | 5s T2V warm → 76.5s (M, zenn); 8s @ 0.3MP → ~2 min (M, wan2-7) | 768p / 15s; ~31.8GB peak. NVFP4 pack later. |
+| **48GB+** (6000 / A6000 / PRO) | 720p–768p | 10s @ 480p → <72s (M) | 768p / 15s workstation-grade. 128GB host RAM comfort. |
+| **DGX Spark (GB10)** | 384×672 AV → **720p** | 15.08s AV (A+V, chishiki37 ref) → ~15 min class (M); **10s @ 720p, 20-step → ~20 min (M, ours, drowzeys Sol-Engine)** | 720p / 10s+ with the Sol-Engine overlay (drowzeys). Sage pinned <3.0. |
+
+**Like-for-like compare (5s @ 0.7MP, 8-step):** 4090 ≈ 140s (M) vs 5080 = 163s (M) →
+24GB tier wins, ordering is monotonic by construction.
+
+**Receipt gaps (do not trust invented numbers here):**
+- 4090 @ 480p-class: **no direct receipt on record** — lowest verified is 0.7MP.
+  Reference only: community 3090 does 5s @ 832×480 in 4m26s (M, tonyd2wild).
+- 8GB-modern 5s wall on our exact INT8 pack: not certified yet (directional only).
 
 **Scaling rules of thumb (M):**
 - Duration is **superlinear**: 10s ≈ 2.9× of 5s, not 2×
@@ -125,8 +134,8 @@ Turbo 8-step recipe where supported; sources tagged M = measured, R = reported.
 - 720p ≈ **4×** of 480p time
 - Reference images slow **every** step — cap them
 
-**System RAM is the hidden requirement** — not VRAM alone. See
-[docs/ATTRIBUTIONS.md](docs/ATTRIBUTIONS.md) for every source.
+**System RAM is the hidden requirement** — not VRAM alone. Every timing traces to
+a primary: **[docs/ATTRIBUTIONS.md](docs/ATTRIBUTIONS.md)**.
 
 ---
 

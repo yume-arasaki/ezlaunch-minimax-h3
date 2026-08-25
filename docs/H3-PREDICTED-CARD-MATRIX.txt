@@ -31,7 +31,7 @@ RTX 4070 Ti                                  ada        12282   504 nvidia_12gb 
 RTX 4070 Ti SUPER                            ada        16376   672 nvidia_16gb       ACCEPT         SPEC 4070 Ti Super is 16GB
 RTX 4080                                     ada        16376   716 nvidia_16gb       ACCEPT         SPEC Hamster 16GB row
 RTX 4080 SUPER                               ada        16376   736 nvidia_16gb       ACCEPT         SPEC 4080 Super same tier
-RTX 4090                                     ada        24564  1008 rtx_4090          ACCEPT-24GB    MEASURED Joey 4090 field run
+RTX 4090                                     ada        24564  1008 rtx_4090          ACCEPT-24GB    MEASURED (ours): 5s@0.7MP 4-step 90.6s v2 stack; 15s@0.7MP 8
 RTX 4090 D                                   ada        24564  1008 rtx_4090          ACCEPT-24GB    SPEC 4090 D (China) same tier
 RTX 5050                                     blackwell   8192   224 nvidia_8gb        ACCEPT-SLOW    SPEC 5050 is 8GB (GDDR6)
 RTX 5060                                     blackwell   8192   320 nvidia_8gb        ACCEPT-SLOW    MEASURED 5060 Laptop 8GB runs (Tensor Alchemist)

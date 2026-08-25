@@ -51,4 +51,6 @@ notes: >
   the chishiki37 set; full luqidaxia set ~171GB). Audio+video both from H3
   via MiniMaxH3ReferenceToVideo (NOT ImageToVideo — that latent is wrong
   for audio → IndexError). Sage pinned <3.0, never --use-sage-attention.
+  720p well within reach: 10s @ 720p, 20-step ≈ ~20 min (MEASURED ours,
+  drowzeys Sol-Engine overlay). chishiki37 384x672/362f is the base AV path.
   Co-tenancy: start LLM first, H3 after. License: see territory gate.
