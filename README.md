@@ -4,10 +4,10 @@
 
 Double-click → Install engine → Download models → Launch.
 
-| Supported (MVP) | |
+| Supported | |
 |-----------------|--|
-| **GPUs** | NVIDIA **8GB+** (Pascal GTX 10 through RTX 5090 / workstation). AMD + Apple later. |
-| **OS** | **Windows 10/11** · **Linux** (Ubuntu 22.04-class) |
+| **GPUs** | NVIDIA **8GB+**: Pascal GTX 10 · RTX 20/30/40/50 · workstation · **DGX Spark (GB10)**. AMD + Apple later. |
+| **OS** | **Windows 10/11** · **Linux** (Ubuntu 22.04-class) · **DGX Spark (Ubuntu/ARM64)** |
 | **Output** | Local ComfyUI with **t2v · i2v · ref2v** Turbo workflows (video + audio) |
 
 > Not a cloud service. Everything runs on **your** GPU.
@@ -184,12 +184,31 @@ Common ones:
 
 ```bash
 cd EZlaunch-Minimax-H3
-pip install -e ".[dev]"
-pytest -q
-python -m ezlaunch --cli
+uv sync --python 3.11          # or pip install -e ".[dev]"
+uv run pytest -q               # 135 passed
+uv run python -m ezlaunch --cli
 ```
 
-Architecture notes: [docs/ADVANCED.md](docs/ADVANCED.md) · [docs/PROFILES.md](docs/PROFILES.md)
+Command line: `python -m ezlaunch --help` · `--cli` (text wizard) · `--status`
+(JSON state) · `--launch`/`comfy-up` (start Comfy only) · `--workflows`
+(list t2v / i2v / ref2v graphs). See [docs/ADVANCED.md](docs/ADVANCED.md).
+
+Useful env vars:
+
+| Var | Meaning |
+|-----|---------|
+| `EZLAUNCH_HOME` | Override install root (must be durable) |
+| `EZLAUNCH_MIN_DISK_GB` | Lower disk-floor for tests / tight boxes |
+| `EZLAUNCH_ALLOW_EPHEMERAL=1` | Allow /tmp scratch roots (tests only) |
+| `HF_TOKEN` | Hugging Face token for gated models |
+
+Smoke test (no torch, no model downloads):
+```bash
+./scripts/smoke_no_models.sh
+```
+
+Architecture notes: [docs/ADVANCED.md](docs/ADVANCED.md) · [docs/PROFILES.md](docs/PROFILES.md).
+Every timing / recipe / claim and its source: **[docs/ATTRIBUTIONS.md](docs/ATTRIBUTIONS.md)**.
 
 Battle-tested stack notes (4090 lab): inspired by local H3 turbo work (driver 580, torch cu128, kitchen FORCE_CUDA, sage sm89→Triton, CLIP CPU).
 
@@ -213,13 +232,15 @@ This project is structured for AI coding agent collaboration:
 
 ## Roadmap
 
-- [x] 4090 / 3090 MVP profiles
-- [x] NVIDIA 8 / 12 / 16 / 24 / 32 / 48GB tier profiles
-- [x] Double-click Windows + Linux entry
-- [x] Auto HF model download
+- [x] NVIDIA 8 / 12 / 16 / 24 / 32 / 48GB tier profiles + full-card catalog (66 cards)
+- [x] DGX Spark (GB10) — AV reference recipe, SM121 non-negotiables
+- [x] Double-click Windows + Linux entry, Store-stub guard
+- [x] Auto HF model download + optional Heretic TE
 - [x] Shipped **t2v / i2v / ref2v** turbo workflows + **comfy-up** launch
+- [x] Expected-output-by-card table + per-card feasibility predictor
 - [ ] AMD / Apple Silicon
-- [ ] Offline USB pack
+- [ ] Territory/license gate (Joey decision)
+- [ ] NVFP4 5090 pack · Offline USB pack
 - [ ] One-click example prompt pack
 
 ---
